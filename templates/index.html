@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Portfolio — Développeur Full Stack</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/index.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+</head>
+<body>
+
+<header>
+  <b><div class="logo">Clément<span> </span>Peugeot</div></b>
+  <nav>
+    <ul>
+      <li><a href="#projects">Projets</a></li>
+      <li><a href="#about">À propos</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="main-background">
+    <video autoplay loop muted playsinline>
+      <source src="/static/assets/videocyberbg1.mp4" type="video/mp4">
+    </video>
+  </div>
+  
+  <div id="canvas-container"></div>
+  
+  <div class="hero-content">
+    <div class="eyebrow">DISPONIBLE POUR DE NOUVEAUX PROJETS</div>
+    <h1>Je construis des<br>systèmes <span class="outline">robustes</span>,<br>du serveur à l'écran.</h1>
+    <p class="hero-sub">Développeur full stack. Je construis des sites web et applications de A à Z, design, interface utilisateur, base de donnée, sécurité, authentification, et hébergement. Maitrise de dizaines de languages et ressources et propulsé par l'intelligence artficielle. J'écoute et j'accompagne jusqu'à l'excellence marketing.</p>
+    <div class="hero-actions">
+      <a href="#projects" class="btn btn-primary"><b>Voir mes projets</b></a>
+      <a href="#contact" class="btn btn-ghost"><b>Me contacter</b></a>
+    </div>
+  </div>
+  
+  <div class="scroll-cue"><span class="line"></span> SCROLL</div>
+  
+  <div class="stack-tags">
+    <span>EXCELLENCE</span><span>RIGUEUR</span><span></span><span></span>
+  </div>
+</section>
+
+<section id="projects">
+  <div class="section-head reveal-left">
+    <div>
+      <div class="section-label">// 01 — TRAVAUX</div>
+      <div class="section-title">Bibliothèque de projets</div>
+    </div>
+    <div class="section-count">03 sélectionnés</div>
+  </div>
+  
+  <div class="projects-grid">
+    
+    <div class="project-card reveal-up">
+      <div class="video-container">
+        <video src="/static/videos/task-manager.mp4" loop muted playsinline></video>
+      </div>
+      
+      <div class="project-content">
+        <div class="project-index">[ 01 ]</div>
+        <div class="project-name">Gestionnaire de tâches</div>
+        <p class="project-desc">Application de suivi de tâches avec authentification, API REST et tableau de bord en temps réel.</p>
+        <div class="project-meta">
+          <div class="project-tags"><span>FLASK</span><span>MYSQL</span></div>
+          <span class="project-arrow">↗</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal-up delay-100">
+      <div class="video-container">
+        <video src="/static/videos/ecommerce-api.mp4" loop muted playsinline></video>
+      </div>
+      
+      <div class="project-content">
+        <div class="project-index">[ 02 ]</div>
+        <div class="project-name">API e-commerce</div>
+        <p class="project-desc">Backend complet pour boutique en ligne : catalogue, panier, commandes et webhook de paiement.</p>
+        <div class="project-meta">
+          <div class="project-tags"><span>PYTHON</span><span>SQL</span></div>
+          <span class="project-arrow">↗</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="project-card reveal-up delay-200">
+      <div class="video-container">
+        <video src="/static/videos/analytics-dashboard.mp4" loop muted playsinline></video>
+      </div>
+      
+      <div class="project-content">
+        <div class="project-index">[ 03 ]</div>
+        <div class="project-name">Dashboard analytics</div>
+        <p class="project-desc">Visualisation de données en direct avec graphiques interactifs et export de rapports.</p>
+        <div class="project-meta">
+          <div class="project-tags"><span>JS</span><span>FLASK</span></div>
+          <span class="project-arrow">↗</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<section class="about" id="about">
+  <div class="section-head reveal-right">
+    <div class="section-left">
+      <span class="section-label">// 02 . STACK SPRINT</span>
+      <h2 class="section-title">Technologies & Langages</h2>
+    </div>
+    <span class="section-count">02</span>
+  </div>
+
+  <div class="carousel-container">
+    <div class="carousel-track" id="carouselTrack">
+      
+      <div class="carousel-item clickable-item">
+        <i class="devicon-html5-plain colored"></i>
+        <span>HTML5</span>
+        <div class="tech-desc-zone">Structuration moderne et sémantique pour le web adaptatif.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-css3-plain colored"></i>
+        <span>CSS3</span>
+        <div class="tech-desc-zone">Conception d'interfaces épurées avec Flexbox, Grid et animations fluides.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-javascript-plain colored"></i>
+        <span>JavaScript</span>
+        <div class="tech-desc-zone">Logique front-end dynamique, asynchronisme et manipulations d'API.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-python-plain colored"></i>
+        <span>Python</span>
+        <div class="tech-desc-zone">Développement backend robuste, scripts d'automatisation et IA.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-flask-original"></i>
+        <span>Flask</span>
+        <div class="tech-desc-zone">Micro-framework Python léger pour concevoir des API REST rapides.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-java-plain colored"></i>
+        <span>Java</span>
+        <div class="tech-desc-zone">Programmation orientée objet pour des applications scalables.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-kotlin-plain colored"></i>
+        <span>Kotlin</span>
+        <div class="tech-desc-zone">Modernité et sécurité pour le développement applicatif moderne.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-mysql-plain colored"></i>
+        <span>MySQL</span>
+        <div class="tech-desc-zone">Gestion de bases de données relationnelles et requêtes complexes.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-postgresql-plain colored"></i>
+        <span>PostgreSQL</span>
+        <div class="tech-desc-zone">Base de données open-source puissante pour volumes complexes.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-amazonwebservices-plain-wordmark colored"></i>
+        <span>AWS Cloud</span>
+        <div class="tech-desc-zone">Déploiement Cloud sécurisé, serveurs scalables et stockage S3.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-linux-plain"></i>
+        <span>VPS Hetzner</span>
+        <div class="tech-desc-zone">Hébergement VPS haute performance à infrastructure optimisée.</div>
+      </div>
+
+      <div class="carousel-item clickable-item">
+        <i class="devicon-html5-plain colored"></i>
+        <span>HTML5</span>
+        <div class="tech-desc-zone">Structuration moderne et sémantique pour le web adaptatif.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-css3-plain colored"></i>
+        <span>CSS3</span>
+        <div class="tech-desc-zone">Conception d'interfaces épurées avec Flexbox, Grid et animations fluides.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-javascript-plain colored"></i>
+        <span>JavaScript</span>
+        <div class="tech-desc-zone">Logique front-end dynamique, asynchronisme et manipulations d'API.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-python-plain colored"></i>
+        <span>Python</span>
+        <div class="tech-desc-zone">Développement backend robuste, scripts d'automatisation et IA.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-flask-original"></i>
+        <span>Flask</span>
+        <div class="tech-desc-zone">Micro-framework Python léger pour concevoir des API REST rapides.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-java-plain colored"></i>
+        <span>Java</span>
+        <div class="tech-desc-zone">Programmation orientée objet pour des applications scalables.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-kotlin-plain colored"></i>
+        <span>Kotlin</span>
+        <div class="tech-desc-zone">Modernité et sécurité pour le développement applicatif moderne.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-mysql-plain colored"></i>
+        <span>MySQL</span>
+        <div class="tech-desc-zone">Gestion de bases de données relationnelles et requêtes complexes.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-postgresql-plain colored"></i>
+        <span>PostgreSQL</span>
+        <div class="tech-desc-zone">Base de données open-source puissante pour volumes complexes.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-amazonwebservices-plain-wordmark colored"></i>
+        <span>AWS Cloud</span>
+        <div class="tech-desc-zone">Déploiement Cloud sécurisé, serveurs scalables et stockage S3.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-linux-plain"></i>
+        <span>VPS Hetzner</span>
+        <div class="tech-desc-zone">Hébergement VPS haute performance à infrastructure optimisée.</div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<section id="contact">
+  <div class="section-head reveal-left">
+    <div>
+      <div class="section-label">// 03 — CONTACT</div>
+      <div class="section-title">Parlons de votre projet</div>
+    </div>
+  </div>
+  
+  <div class="contact-wrap">
+    <div class="contact-info reveal-left">
+      <p>Une idée, un projet, une opportunité ? N'hésitez pas à m'écrire — je réponds généralement sous 48h.</p>
+      <div class="contact-links">
+        <a href="mailto:contact@exemple.com">peugeotclement1@gmail.com ↗</a>
+        <a href="https://github.com/peugeotclement1-commits" target="_blank">github.com/CLEXDEV ↗</a>
+        <a href="#">linkedin.com/in/votreprofil ↗</a>
+      </div>
+    </div>
+    
+    <form id="contact-form" action="/envoi" method="POST" class="reveal-right">
+      <div class="field">
+        <label for="name">NOM</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="field">
+        <label for="email">EMAIL</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="field">
+        <label for="message">MESSAGE</label>
+        <textarea id="message" name="message" rows="5" required></textarea>
+      </div>
+      <div class="submit-row">
+        <button type="submit" class="btn btn-primary">Envoyer le message</button>
+      </div>
+    </form>
+    
+    <div id="custom-popup" class="popup-overlay">
+      <div class="popup-content">
+        <div class="popup-icon">✓</div>
+        <h3>Succès !</h3>
+        <p>Votre e-mail a été envoyé avec succès.</p>
+        <button id="close-popup" class="btn-popup">Fermer</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="reveal-up">
+  <span>© 2026 — Tous droits réservés</span>
+  <span>Conçu et développé pour vous aider</span>
+</footer>
+<script src="/static/index.js"></script>
+
+</body>
+</html>

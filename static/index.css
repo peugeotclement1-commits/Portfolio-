@@ -1,0 +1,867 @@
+/* ==========================================================================
+   1. VARIABLES & CONFIGURATION GLOBALE
+   ========================================================================== */
+:root {
+  --bg: #0a0e14;
+  --bg-elevated: #10151f;
+  --accent: #5eead4;
+  --accent-dim: rgba(94, 234, 212, 0.35); /* Augmenté pour plus de lueur */
+  --amber: #f0a868;
+  --text: #ffffff; /* Blanc pur pour un contraste maximal */
+  --text-dim: #a1aab8; /* Gris plus clair et lumineux */
+  --line: #1d2430;
+  --font-display: 'Space Grotesk', sans-serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { 
+  margin: 0; 
+  padding: 0; 
+  box-sizing: border-box; 
+}
+
+html { 
+  scroll-behavior: smooth; 
+}
+
+body {
+  background-color: #050811;
+  color: var(--text);
+  font-family: var(--font-body);
+  overflow-x: hidden;
+}
+
+::selection { 
+  background: var(--accent); 
+  color: var(--bg); 
+}
+
+a { 
+  color: inherit; 
+  text-decoration: none; 
+}
+
+/* Base des sections */
+section { 
+  position: relative; 
+  z-index: 1; 
+  padding: 140px 6vw; 
+}
+
+/* En-têtes de sections partagés */
+.section-head { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: flex-end; 
+  margin-bottom: 64px; 
+  border-bottom: 1px solid var(--line); 
+  padding-bottom: 28px; 
+}
+
+.section-label { 
+  font-family: var(--font-mono); 
+  font-size: 13px; 
+  color: var(--accent); 
+  text-shadow: 0 0 8px var(--accent-dim); /* Effet lumineux */
+}
+
+.section-title { 
+  font-family: var(--font-display); 
+  font-size: clamp(1.8rem, 3.4vw, 2.8rem); 
+  font-weight: 600; 
+  margin-top: 10px; 
+}
+
+.section-count { 
+  font-family: var(--font-mono); 
+  font-size: 13px; 
+  color: var(--text-dim); 
+}
+
+
+/* ==========================================================================
+   2. ÉLÉMENTS D'ARRIÈRE-PLAN (VIDEO & GRID)
+   ========================================================================== */
+
+
+.main-background {
+  position: absolute;
+  inset: 0; 
+  opacity: 0.22; /* Augmenté de 0.15 à 0.22 pour redonner de la clarté au fond */
+  z-index: 0; 
+  pointer-events: none; 
+}
+
+.main-background video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+
+/* ==========================================================================
+   3. HEADER & NAVIGATION (AVEC ANIMATIONS)
+   ========================================================================== */
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 28px 6vw;
+  backdrop-filter: blur(8px);
+  background: linear-gradient(to bottom, rgba(10,14,20,0.9), transparent);
+  animation: headerEntry 1s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+.logo {
+  font-family: var(--font-mono);
+  font-size: 14px;
+  letter-spacing: 0.5px;
+  color: var(--accent);
+  text-shadow: 0 0 10px var(--accent-dim); /* Effet néon soft */
+}
+
+nav ul { 
+  display: flex; 
+  gap: 40px; 
+  list-style: none; 
+}
+
+nav a {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-dim);
+  position: relative;
+  /* 1. On affiche l'élément en inline-block pour que le scale fonctionne correctement */
+  display: inline-block; 
+  /* 2. On ajoute 'transform 0.25s ease' à la liste des transitions */
+  transition: color 0.25s ease, text-shadow 0.25s ease, transform 0.25s ease;
+}
+
+nav a:hover { 
+  color: var(--text); 
+  text-shadow: 0 0 8px rgba(255, 255, 255, 0.5); 
+  /* 3. On augmente la taille de 10% (1.1). Modifie cette valeur selon tes envies ! */
+  transform: scale(1.1); 
+}
+
+/* --- Apparitions en Cascade (Header) --- */
+header .logo,
+header nav ul li {
+  opacity: 0;
+  animation: navItemEntry 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+header .logo { animation-delay: 0.4s; }
+header nav ul li:nth-child(1) { animation-delay: 0.35s; }
+header nav ul li:nth-child(2) { animation-delay: 0.45s; }
+header nav ul li:nth-child(3) { animation-delay: 0.55s; }
+
+@keyframes headerEntry {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes navItemEntry {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ==========================================================================
+   4. SECTION HERO & CANVAS
+   ========================================================================== */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 0 6vw;
+  z-index: 1;
+}
+
+#canvas-container {
+  position: absolute;
+  top: 0;
+  left: 425px;
+  width: 100%;
+  height: 100%;
+  z-index: 1; 
+  pointer-events: all;
+  transition: left 2.5s cubic-bezier(0.25, 1, 0.5, 1), width 2.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+#canvas-container.fullscreen {
+  left: 0 !important;
+  width: 100% !important;
+  z-index: 10; 
+}
+
+#canvas-container canvas { 
+  display: block; 
+}
+
+/* Gestion des états de transition (JS) */
+.hero-content, .stack-tags, .scroll-cue {
+  opacity: 0;
+  transform: translateY(40px);
+  pointer-events: none;
+  transition: opacity 3.5s cubic-bezier(0.25, 1, 0.5, 1), transform 3.5s cubic-bezier(0.25, 1, 0.5, 1);
+}
+
+.hero-content.active, .stack-tags.active, .scroll-cue.active {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.hero-content.fade-out, .stack-tags.fade-out, .scroll-cue.fade-out {
+  opacity: 0 !important;
+  transform: translateY(-40px) !important;
+  pointer-events: none !important;
+  transition: opacity 1.8s cubic-bezier(0.25, 1, 0.5, 1), transform 1.8s cubic-bezier(0.25, 1, 0.5, 1) !important;
+}
+
+/* Typographie & Actions Hero */
+.hero-content { 
+  position: relative; 
+  z-index: 2; 
+  max-width: 620px; 
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--accent);
+  letter-spacing: 1px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+h1 { 
+  font-family: var(--font-display); 
+  font-size: clamp(2.6rem, 6vw, 5rem); 
+  font-weight: 700; 
+  line-height: 1.04; 
+  letter-spacing: -0.02em; 
+}
+
+h1 .outline { 
+  color: transparent; 
+  -webkit-text-stroke: 1.5px var(--text-dim); 
+}
+
+.hero-sub { 
+  margin-top: 28px; 
+  font-size: clamp(1rem, 1.6vw, 1.2rem); 
+  color: var(--text-dim); 
+  max-width: 520px; 
+  line-height: 1.6; 
+}
+
+.hero-actions { 
+  margin-top: 44px; 
+  display: flex; 
+  gap: 18px; 
+}
+
+/* Widgets Hero (Scroll / Badges) */
+.scroll-cue { 
+  position: absolute; 
+  bottom: 40px; 
+  left: 6vw; 
+  font-family: var(--font-mono); 
+  font-size: 11px; 
+  color: var(--text-dim); 
+  display: flex; 
+  align-items: center; 
+  gap: 12px; 
+  z-index: 2; 
+}
+
+.scroll-cue .line { 
+  width: 32px; 
+  height: 1px; 
+  background: var(--text-dim); 
+  position: relative; 
+  overflow: hidden; 
+}
+
+.stack-tags { 
+  position: absolute; 
+  bottom: 40px; 
+  right: 6vw; 
+  display: flex; 
+  gap: 10px; 
+  z-index: 2; 
+}
+
+.stack-tags span { 
+  font-family: var(--font-mono); 
+  font-size: 11px; 
+  color: var(--text-dim); 
+  border: 1px solid var(--line); 
+  padding: 6px 12px; 
+  border-radius: 100px; 
+}
+
+
+/* ==========================================================================
+   5. BOUTONS STYLISÉS
+   ========================================================================== */
+.btn { 
+  font-family: var(--font-mono); 
+  font-size: 13px; 
+  padding: 14px 28px; 
+  border-radius: 4px; 
+  border: 1px solid var(--line); 
+  transition: all 0.25s ease; 
+  cursor: pointer; 
+}
+
+.btn-primary { 
+  background: var(--accent); 
+  color: var(--bg); 
+  border-color: var(--accent); 
+  font-weight: 500; 
+}
+
+.btn-primary:hover { 
+  box-shadow: 0 0 24px var(--accent-dim); 
+  transform: translateY(-2px); 
+}
+
+.btn-ghost { 
+  color: var(--text); 
+  background: transparent; 
+}
+
+.btn-ghost:hover { 
+  border-color: var(--accent); /* Devient turquoise pour ramener du peps */
+  background: var(--bg-elevated); 
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.05);
+}
+
+
+/* ==========================================================================
+   6. SECTION PROJETS (BIBLIOTHÈQUE)
+   ========================================================================== */
+.project-disclaimer {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-bottom: 20px;
+}
+
+.projects-grid { 
+  display: grid; 
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+  gap: 1px; 
+  background: var(--line); 
+  border: 1px solid var(--line); 
+}
+
+/* --- Carte Projet (Fusionnée et nettoyée) --- */
+.project-card { 
+  background: var(--bg); 
+  padding: 36px; 
+  position: relative; 
+  overflow: hidden; 
+  border: 1px solid transparent;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1;
+}
+
+.project-card:hover {
+  transform: scale(1.03); 
+  border-color: var(--accent);
+  z-index: 10; 
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(94, 234, 212, 0.15); /* Halo lumineux turquoise */
+}
+
+/* Vidéo survolée */
+.video-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  z-index: 0;
+  pointer-events: none; 
+}
+
+.video-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  filter: brightness(0.45) contrast(1.1); /* Légèrement plus lumineux qu'avant */
+}
+
+.project-card:hover .video-container {
+  opacity: 1;
+}
+
+/* Contenu textuel cartes */
+.project-content {
+  position: relative;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.project-index {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--accent);
+}
+
+.project-name { 
+  font-family: var(--font-display); 
+  font-size: 1.4rem; 
+  font-weight: 600; 
+  margin: 18px 0 12px; 
+}
+
+.project-desc { 
+  color: var(--text-dim); 
+  font-size: 0.92rem; 
+  line-height: 1.6; 
+  margin-bottom: 24px; 
+}
+
+.project-meta { 
+  display: flex; 
+  justify-content: space-between; 
+  align-items: center; 
+}
+
+.project-tags span { 
+  font-family: var(--font-mono); 
+  font-size: 10px; 
+  color: var(--amber); 
+  border: 1px solid rgba(240, 168, 104, 0.35); 
+  padding: 4px 8px; 
+  border-radius: 100px; 
+}
+
+.project-arrow {
+  color: var(--text-dim);
+  transition: color 0.3s, transform 0.3s;
+}
+
+.project-card:hover .project-arrow {
+  color: var(--accent);
+  transform: translate(2px, -2px);
+}
+
+
+/* ==========================================================================
+   7. CAROUSEL INTERACTIF - EFFET FOCUS SCALE & BORDURES FLUIDES
+   ========================================================================== */
+.about{
+  padding-bottom: 0;
+}
+.carousel-container {
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+  cursor: grab;
+  padding: 0; 
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+  /* Transition douce pour l'effacement des bordures du container */
+  transition: border-color 0.4s ease; 
+}
+
+/* NOUVEAU : Si le container contient un élément actif, on efface ses bordures horizontales */
+.carousel-container:has(.is-active-tech) {
+  border-top-color: transparent;
+  border-bottom-color: transparent;
+}
+
+.carousel-container:active {
+  cursor: grabbing;
+}
+
+.carousel-track {
+  display: flex;
+  gap: 1px;
+  background: var(--line);
+  width: max-content;
+  user-select: none;
+  will-change: transform;
+  transition: background 0.4s ease;
+}
+
+/* NOUVEAU : Si un élément est actif, le fond de la piste devient transparent 
+   pour masquer les fines lignes de 1px entre les cases */
+.carousel-track:has(.is-active-tech) {
+  background: transparent;
+}
+
+.carousel-item {
+  background: var(--bg);
+  padding: 35px 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  min-width: 250px;
+  max-width: 250px;
+  /* Important : on ajoute transform dans la transition globale */
+  transition: background 0.3s ease, box-shadow 0.3s ease, transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), padding 0.4s ease;
+  position: relative;
+  cursor: pointer;
+  overflow: hidden;
+}
+
+.carousel-item:hover {
+  background: var(--bg-elevated);
+  box-shadow: inset 0 0 0 1px var(--accent), 0 0 20px rgba(94, 234, 212, 0.15);
+  z-index: 5;
+}
+
+/* NOUVEAU : Quand un élément est ouvert, TOUS les autres subissent un léger scale down (rétrécissement) */
+/* 1. Quand un élément est cliqué, TOUTES LES AUTRES cases rétrécissent */
+.carousel-track:has(.is-active-tech) .carousel-item:not(.is-active-tech) {
+  transform: scale(0.92);
+  opacity: 0.6;
+}
+
+/* 2. SEULEMENT la case qui possède la classe active grossit */
+.carousel-item.is-active-tech {
+  background: var(--bg-elevated);
+  transform: scale(1.08) !important; /* Seule cette case prend le scale de 1.08 */
+  opacity: 1 !important;
+  z-index: 10 !important; 
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(94, 234, 212, 0.25);
+  padding-bottom: 25px;
+}
+
+/* NOUVEAU : L'élément cliqué prend un gros scale par rapport aux autres */
+.carousel-item.is-active-tech {
+  background: var(--bg-elevated);
+  transform: scale(1.08) !important; /* Augmentation marquée du scale */
+  opacity: 1 !important;
+  z-index: 10 !important; 
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), inset 0 0 0 1px var(--accent), 0 0 25px rgba(94, 234, 212, 0.25);
+  padding-bottom: 25px;
+}
+
+.carousel-item i {
+  font-size: 2.8rem;
+  color: var(--text-dim);
+  transition: color 0.3s, transform 0.3s ease;
+}
+
+.carousel-item:hover i {
+  color: var(--text);
+  transform: scale(1.05);
+}
+
+.carousel-item.is-active-tech i {
+  color: var(--text);
+  transform: scale(1);
+}
+
+.carousel-item span {
+  font-family: var(--font-mono);
+  font-size: 13px;
+  color: var(--text-dim);
+  letter-spacing: 0.5px;
+  transition: color 0.3s;
+}
+
+.carousel-item:hover span,
+.carousel-item.is-active-tech span {
+  color: var(--accent);
+}
+
+/* Zone de description */
+.tech-desc-zone {
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(10px);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  line-height: 1.5;
+  color: var(--text-dim);
+  text-align: center;
+  margin-top: 0;
+  transition: max-height 0.3s cubic-bezier(0.25, 1, 0.5, 1), 
+              opacity 0.2s ease, 
+              transform 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+              margin-top 0.3s ease;
+  pointer-events: none;
+}
+
+.carousel-item.is-active-tech .tech-desc-zone {
+  max-height: 80px; 
+  opacity: 1;
+  transform: translateY(0);
+  margin-top: 10px;
+}
+/* ==========================================================================
+   8. SECTION CONTACT & POP-UP MAIL
+   ========================================================================== */
+
+.contact-wrap { 
+  display: grid; 
+  grid-template-columns: 1fr 1.3fr; 
+  gap: 80px; 
+}
+
+.contact-info p { 
+  color: var(--text-dim); 
+  line-height: 1.7; 
+  max-width: 380px; 
+  margin-bottom: 32px; 
+}
+
+.contact-links { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 14px; 
+}
+
+.contact-links a { 
+  font-family: var(--font-mono); 
+  font-size: 14px; 
+  color: var(--text); 
+  display: inline-flex; 
+  align-items: center; 
+  gap: 10px; 
+  width: fit-content; 
+  transition: color 0.25s, transform 0.25s;
+}
+
+.contact-links a:hover {
+  color: var(--accent);
+  transform: translateX(4px);
+}
+
+/* Formulaire */
+form { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 22px; 
+}
+
+.field { 
+  display: flex; 
+  flex-direction: column; 
+  gap: 8px; 
+}
+
+.field label { 
+  font-family: var(--font-mono); 
+  font-size: 11px; 
+  color: var(--text-dim); 
+}
+
+.field input, .field textarea { 
+  background: var(--bg-elevated); 
+  border: 1px solid var(--line); 
+  border-radius: 4px; 
+  padding: 14px 16px; 
+  color: var(--text); 
+  font-size: 14px; 
+  transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.field input:focus, .field textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 10px rgba(94, 234, 212, 0.15); /* Éclaire le champ actif */
+}
+
+.submit-row { 
+  display: flex; 
+  justify-content: flex-end; 
+}
+
+/* --- Modale / Pop-up de confirmation --- */
+.popup-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.65); /* Un peu plus sombre pour faire ressortir la boîte lumineuse */
+  backdrop-filter: blur(5px); 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+}
+
+.popup-content {
+  background: #0b1121; /* Légèrement ajusté pour correspondre à ton univers */
+  color: #ffffff;      
+  padding: 30px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(94, 234, 212, 0.1); 
+  border: 1px solid rgba(94, 234, 212, 0.2); /* Bordure lumineuse turquoise */
+  transform: scale(0.7);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.popup-icon {
+  width: 60px;
+  height: 60px;
+  background: #2ecc71;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 30px;
+  margin: 0 auto 15px auto;
+  box-shadow: 0 0 15px rgba(46, 204, 113, 0.4); /* Icône verte lumineuse */
+}
+
+.popup-content h3 {
+  color: #ffffff; 
+  margin-bottom: 10px;
+  font-family: var(--font-display);
+}
+
+.popup-content p {
+  color: var(--text-dim); 
+  margin-bottom: 20px;
+}
+
+.btn-popup {
+  background: var(--accent); /* Devient turquoise pour plus d'harmonie graphique */
+  color: var(--bg); 
+  border: none;
+  padding: 10px 25px;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+
+.btn-popup:hover {
+  background: #ffffff;
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+}
+
+/* États d'activation Pop-up (JS) */
+.popup-overlay.active { opacity: 1; pointer-events: auto; }
+.popup-overlay.active .popup-content { transform: scale(1); }
+.popup-overlay.hide { opacity: 0; }
+.popup-overlay.hide .popup-content { transform: scale(0.9); transition: transform 0.2s ease; }
+
+
+/* ==========================================================================
+   9. FOOTER & MEDIA QUERIES (RESPONSIVE)
+   ========================================================================== */
+footer { 
+  border-top: 1px solid var(--line); 
+  padding: 32px 6vw; 
+  display: flex; 
+  justify-content: space-between; 
+  font-family: var(--font-mono); 
+  font-size: 12px; 
+  color: var(--text-dim); 
+  position: relative; 
+  z-index: 1; 
+}
+
+@media (max-width: 860px) {
+  nav ul { display: none; }
+  .contact-wrap { grid-template-columns: 1fr; gap: 48px; }
+  .stack-tags { display: none; }
+  
+  /* Ajustements responsive pour le About */
+  .about-content-wrapper { gap: 30px; }
+}
+
+/* ==========================================================================
+   10. ANIMATIONS AU SCROLL (REVEAL)
+   ========================================================================== */
+
+/* --- États de départ (Cachés) --- */
+.reveal-up, 
+.reveal-left, 
+.reveal-right, 
+.reveal-scale {
+  opacity: 0;
+  /* On utilise 'forwards' pour que l'élément garde son état final */
+  transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); 
+}
+
+/* Glisse vers le haut */
+.reveal-up {
+  transform: translateY(60px);
+}
+
+/* Glisse depuis la gauche */
+.reveal-left {
+  transform: translateX(-60px);
+}
+
+/* Glisse depuis la droite */
+.reveal-right {
+  transform: translateX(60px);
+}
+
+/* Effet de zoom (Scale) */
+.reveal-scale {
+  transform: scale(0.85);
+}
+
+/* --- État final (Visible) déclenché par le JavaScript --- */
+.reveal-up.is-visible,
+.reveal-left.is-visible,
+.reveal-right.is-visible,
+.reveal-scale.is-visible {
+  opacity: 1;
+  transform: translate(0) scale(1);
+}
+
+/* Optionnel : Gérer les délais si tu as plusieurs éléments sur la même ligne (ex: grille de projets) */
+.delay-100 { transition-delay: 100ms; }
+.delay-200 { transition-delay: 200ms; }
+.delay-300 { transition-delay: 300ms; }
+
+/* ==========================================================================
+   11. OPTIMISATION LUMINOSITÉ (SANS TOUCHER AU HEADER)
+   ========================================================================== */
+
+/* On augmente la clarté du fond cyberpunk et de toutes les sections de texte */
+#cyber-bg-canvas,
+.hero,
+#projects,
+#about,
+#contact,
+footer {
+  filter: brightness(1.75); /* Tu peux ajuster la valeur ici */
+}
+
+/* SÉCURITÉ NAVBAR : On s'assure que le header reste bien au-dessus, sombre et flouté */
+header {
+  background: rgba(10, 14, 20, 0.75) !important; /* Fond sombre semi-transparent */
+  backdrop-filter: blur(12px) !important;       /* Ton effet de flou de fond */
+  -webkit-backdrop-filter: blur(12px);          /* Compatibilité Safari */
+  filter: none !important;                      /* Interdit l'effet de surbrillance ici */
+  z-index: 9999;                                /* Reste toujours au-dessus du reste */
+}
