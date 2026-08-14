@@ -403,6 +403,8 @@ h1 .outline {
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(94, 234, 212, 0.15);
   margin-bottom: -200px;
 }
+
+
 .project-card:hover {
   border-color: var(--accent);
   z-index: 10; 
@@ -499,22 +501,25 @@ h1 .outline {
 }
 .carousel-container {
   width: 100%;
-  overflow: hidden;
+  /* CORRECTION : On coupe strictement le scroll horizontal */
+  overflow-x: hidden;
+  /* CORRECTION : On force l'axe vertical à rester visible pour le padding et le scale */
+  overflow-y: visible; 
   position: relative;
   cursor: grab;
-  padding: 0; 
+ 
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
-  /* Transition douce pour l'effacement des bordures du container */
-  transition: border-color 0.4s ease; 
+
 }
+
 
 /* NOUVEAU : Si le container contient un élément actif, on efface ses bordures horizontales */
 .carousel-container:has(.is-active-tech) {
   border-top-color: transparent;
   border-bottom-color: transparent;
+   padding: 15px 0; 
 }
-
 .carousel-container:active {
   cursor: grabbing;
 }
@@ -550,6 +555,7 @@ h1 .outline {
   position: relative;
   cursor: pointer;
   overflow: hidden;
+  border: 1px solid var(--line);
 }
 
 .carousel-item:hover {
@@ -563,16 +569,6 @@ h1 .outline {
 .carousel-track:has(.is-active-tech) .carousel-item:not(.is-active-tech) {
   transform: scale(0.92);
   opacity: 0.6;
-}
-
-/* 2. SEULEMENT la case qui possède la classe active grossit */
-.carousel-item.is-active-tech {
-  background: var(--bg-elevated);
-  transform: scale(1.08) !important; /* Seule cette case prend le scale de 1.08 */
-  opacity: 1 !important;
-  z-index: 10 !important; 
-  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.5), 0 0 25px rgba(94, 234, 212, 0.25);
-  padding-bottom: 25px;
 }
 
 /* NOUVEAU : L'élément cliqué prend un gros scale par rapport aux autres */
@@ -594,6 +590,10 @@ h1 .outline {
 .carousel-item:hover i {
   color: var(--text);
   transform: scale(1.05);
+}
+
+.carousel-item.is-active-tech{
+  border: 1px solid var(--accent);
 }
 
 .carousel-item.is-active-tech i {
