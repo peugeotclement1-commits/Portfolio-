@@ -366,56 +366,56 @@ h1 .outline {
   display: grid; 
   grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
   gap: 1px; 
-  background: var(--line); 
-  border: 1px solid var(--line); 
+  background-color: #03050a; /* Couleur de la carte, * 1/1.75 de brightness pour inverser l'effet de brightness de #project */
+  position: relative;
+  /* PERMET à la carte agrandie (.is-expanded) de dépasser sans être coupée */
+  overflow: visible; 
+  /* Ajoute 1px en bas pour afficher la bordure du fond de grille tout en bas */
+  padding-bottom: 1px; 
 }
 
-/* --- Carte Projet (Fusionnée et nettoyée) --- */
 .project-card { 
-  background: var(--bg); 
+  box-sizing: border-box;
+  background-color: #050811; 
   padding: 36px; 
   position: relative; 
   overflow: hidden; 
-  border: 1px solid transparent;
-  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  height: 280px; 
+
+  /* S'assure que l'animation d'agrandissement se fait vers le bas proprement */
+  align-self: start;
+
+  transition: height 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
+              border-color 0.3s ease, 
+              box-shadow 0.3s ease;
   z-index: 1;
 }
 
+
+.project-card.is-expanded {
+  height: 480px;
+  border-color: var(--bg);
+  z-index: 10;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(94, 234, 212, 0.15);
+  margin-bottom: -200px;
+}
 .project-card:hover {
-  transform: scale(1.03); 
   border-color: var(--accent);
   z-index: 10; 
   box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(94, 234, 212, 0.15); /* Halo lumineux turquoise */
 }
 
-/* Vidéo survolée */
-.video-container {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  z-index: 0;
-  pointer-events: none; 
-}
-
-.video-container video {
-  width: 100%;
-  height: 100%;
-  object-fit: cover; 
-  filter: brightness(0.45) contrast(1.1); /* Légèrement plus lumineux qu'avant */
-}
-
-.project-card:hover .video-container {
-  opacity: 1;
-}
 
 /* Contenu textuel cartes */
 .project-content {
   position: relative;
   z-index: 2;
   pointer-events: none;
+  width: 100%;
 }
 
 .project-index {
@@ -456,11 +456,38 @@ h1 .outline {
 .project-arrow {
   color: var(--text-dim);
   transition: color 0.3s, transform 0.3s;
+  cursor: pointer;
 }
 
 .project-card:hover .project-arrow {
   color: var(--accent);
   transform: translate(2px, -2px);
+  cursor: pointer;
+}
+
+/* Assure que la zone cliquable de la flèche fonctionne parfaitement */
+.project-arrow-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+  padding: 5px;
+  z-index: 10;
+  border-radius: 50%;
+}
+
+.project-arrow-link .project-arrow,
+.project-arrow-link:hover .project-arrow,
+.project-arrow-link:focus-visible .project-arrow {
+  cursor: pointer;
+}
+
+.project-arrow-link:hover .project-arrow {
+  transform: translate(2px, -2px);
+  transition: transform 0.2s ease;
 }
 
 
