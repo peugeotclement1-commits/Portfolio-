@@ -5,6 +5,7 @@
 - **Applications mobiles** : Développement d'apps Android/iOS avec Kotlin/Java.
 - **SaaS** : Solutions logicielles en tant que service (ex : outils de gestion).
 - **API** : Création d'API REST pour connecter des services.
+- GitHub contient certains de ces projets
 
 ## Tarifs
 - **Site web vitrine** : À partir de 500€ (hébergement inclus).
@@ -17,3 +18,5 @@
 - **Développement** : Code propre, documenté, et optimisé.
 - **Déploiement** : Hébergement sur Hetzner (VPS) ou AWS Cloud pour les gros projets.
 - **Collaboration** : Échanges réguliers avec le client via email, visio, ou contrat électronique.
+- **Assisstants ia** : Developpement d'outils d'automatisation personnalisé.
+

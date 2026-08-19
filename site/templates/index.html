@@ -48,6 +48,7 @@
   </div>
 </section>
 
+{% for projet in projets %}
 <section id="projects">
   <div class="section-head reveal-left">
     <div>
@@ -58,14 +59,13 @@
   </div>
   
   <div class="projects-grid">
-    
   <div class="project-card reveal-up">
     <div class="project-content">
-      <div class="project-index">[ 01 ]</div>
-      <div class="project-name">To Do List App</div>
-      <p class="project-desc">Application de gestion de listes, création, tri, suppression de tâches.</p>
+      <div class="project-index">{{projet.index}}</div>
+      <div class="project-name">{{projet.nom}}</div>
+      <p class="project-desc">{{projet.description}}</p>
       <div class="project-meta">
-        <div class="project-tags"><span>FLUTTER</span></div>
+        <div class="project-tags"><span>{{projet.tags[0]}}</span></div>
         
         <a href="https://peugeotclement1-commits.github.io/ToDoListApp/" target="_blank" rel="noopener noreferrer" class="project-arrow-link">
           <span class="project-arrow">↗</span>
@@ -105,6 +105,7 @@
 
   </div>
 </section>
+{% endfor %}
 
 <section class="about" id="about">
   <div class="section-head reveal-right">
