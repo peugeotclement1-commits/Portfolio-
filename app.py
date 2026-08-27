@@ -1,15 +1,55 @@
-from pathlib import Path
+############################################################
+######################## IMPORTATIONS ######################
+############################################################
 
+
+from pathlib import Path
 from flask import Flask, render_template, request, jsonify
 from flask_mail import Mail, Message
+from authlib.integrations.flask_client import OAuth
+import importlib.util
+import os
 import ollama
 import json
 import re
+
+#####################################################
+######################## PATHS ######################
+#####################################################
+
 BASE_DIR = Path(__file__).resolve().parent
 SITE_DIR = BASE_DIR / 'site'
 PORTFOLIO_AI_DIR = SITE_DIR / 'portfolio-ai'
 STOCK_FILE = BASE_DIR / 'stock.json'
 DEL_FILE = BASE_DIR / 'del.json'
+SECRETS_FILE = Path(
+    os.environ.get('MONSITE_SECRETS_FILE', BASE_DIR.parent / 'mdp' / 'mdp.py')
+).expanduser().resolve()
+
+###################################################
+############# loading secret passwords ############
+###################################################
+def load_secrets(path: Path):
+    """Charge le module de secrets placé hors du dépôt Git."""
+    if not path.is_file():
+        raise RuntimeError(
+            f"Fichier de secrets introuvable : {path}. "
+            "Définissez MONSITE_SECRETS_FILE ou créez ce fichier."
+        )
+
+    spec = importlib.util.spec_from_file_location('monsite_secrets', path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Impossible de charger le fichier de secrets : {path}")
+
+    secrets = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(secrets)
+    return secrets
+
+
+secrets = load_secrets(SECRETS_FILE)
+GOOGLE_CLIENT_ID = secrets.OauthAppAdminClientId
+GOOGLE_CLIENT_SECRET = secrets.OauthAppAdminCLientSecretCode
+MAIL_APP_PASSWORD = secrets.MAIL_APP_PASSWORD
 
 app = Flask(
     __name__,
@@ -22,11 +62,26 @@ app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
 app.config['MAIL_USERNAME'] = 'peugeotclement1@gmail.com'
-app.config['MAIL_PASSWORD'] = 'cxqxoaccskrdhrza'  # À remplacer par un mot de passe d'application
+app.config['MAIL_PASSWORD'] = MAIL_APP_PASSWORD
 app.config['MAIL_DEFAULT_SENDER'] = 'peugeotclement1@gmail.com'
 
 mail = Mail(app)
 
+################################################
+################# OAuth config #################
+################################################
+
+
+oauth = OAuth(app)
+google = oauth.register(
+    name='google',
+    client_id=GOOGLE_CLIENT_ID,
+    client_secret=GOOGLE_CLIENT_SECRET,
+    server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
+    client_kwargs={
+        'scope': 'openid email profile'
+    }
+)
 
 @app.after_request
 def add_api_cors_headers(response):

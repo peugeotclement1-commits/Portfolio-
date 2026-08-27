@@ -48,16 +48,17 @@
   </div>
 </section>
 
-{% for projet in projets %}
+
 <section id="projects">
   <div class="section-head reveal-left">
     <div>
       <div class="section-label">// 01 — TRAVAUX</div>
       <div class="section-title">Bibliothèque de projets</div>
     </div>
-    <div class="section-count">03 sélectionnés</div>
+    <div class="section-count">{{ projets | length }} sélectionnés</div>
   </div>
-  
+
+  {% for projet in projets %}
   <div class="projects-grid">
   <div class="project-card reveal-up">
     <div class="project-content">
@@ -65,9 +66,11 @@
       <div class="project-name">{{projet.nom}}</div>
       <p class="project-desc">{{projet.description}}</p>
       <div class="project-meta">
-        <div class="project-tags"><span>{{projet.tags[0]}}</span></div>
+        {% for tag in projet.tags %}
+        <div class="project-tags"><span>{{tag}}</span></div>
+        {% endfor %}
         
-        <a href="https://peugeotclement1-commits.github.io/ToDoListApp/" target="_blank" rel="noopener noreferrer" class="project-arrow-link">
+        <a href="{{projet.lien}}" target="_blank" rel="noopener noreferrer" class="project-arrow-link">
           <span class="project-arrow">↗</span>
         </a>
 
@@ -75,36 +78,6 @@
     </div>
   </div>
 
-    <div class="project-card reveal-up delay-100">
-      <div class="project-content">
-        <div class="project-index">[ 02 ]</div>
-        <div class="project-name">API e-commerce</div>
-        <p class="project-desc">Backend complet pour boutique en ligne : catalogue, panier, commandes et webhook de paiement.</p>
-        <div class="project-meta">
-          <div class="project-tags"><span>PYTHON</span><span>SQL</span></div>
-          <a href="https://github.com/peugeotclement1-commits" target="_blank" rel="noopener noreferrer" class="project-arrow-link" aria-label="Ouvrir le projet API e-commerce">
-            <span class="project-arrow">↗</span>
-          </a>
-        </div>
-      </div>
-    </div>
-
-    <div class="project-card reveal-up delay-200">
-      <div class="project-content">
-        <div class="project-index">[ 03 ]</div>
-        <div class="project-name">Dashboard analytics</div>
-        <p class="project-desc">Visualisation de données en direct avec graphiques interactifs et export de rapports.</p>
-        <div class="project-meta">
-          <div class="project-tags"><span>JS</span><span>FLASK</span></div>
-          <a href="https://github.com/peugeotclement1-commits" target="_blank" rel="noopener noreferrer" class="project-arrow-link" aria-label="Ouvrir le projet Dashboard analytics">
-            <span class="project-arrow">↗</span>
-          </a>
-        </div>
-      </div>
-    </div>
-
-  </div>
-</section>
 {% endfor %}
 
 <section class="about" id="about">
