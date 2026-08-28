@@ -30,12 +30,9 @@ SECRETS_FILE = Path(
 ############# loading secret passwords ############
 ###################################################
 def load_secrets(path: Path):
-    """Charge le module de secrets placé hors du dépôt Git."""
+    """Charge le module de secrets placé hors du dépôt Git, si présent."""
     if not path.is_file():
-        raise RuntimeError(
-            f"Fichier de secrets introuvable : {path}. "
-            "Définissez MONSITE_SECRETS_FILE ou créez ce fichier."
-        )
+        return None
 
     spec = importlib.util.spec_from_file_location('monsite_secrets', path)
     if spec is None or spec.loader is None:
@@ -47,9 +44,16 @@ def load_secrets(path: Path):
 
 
 secrets = load_secrets(SECRETS_FILE)
-GOOGLE_CLIENT_ID = secrets.OauthAppAdminClientId
-GOOGLE_CLIENT_SECRET = secrets.OauthAppAdminCLientSecretCode
-MAIL_APP_PASSWORD = secrets.MAIL_APP_PASSWORD
+
+
+def get_secret(environment_name, module_name):
+    """Privilégie les variables d'environnement aux secrets locaux."""
+    return os.environ.get(environment_name) or getattr(secrets, module_name, "")
+
+
+GOOGLE_CLIENT_ID = get_secret('GOOGLE_CLIENT_ID', 'OauthAppAdminClientId')
+GOOGLE_CLIENT_SECRET = get_secret('GOOGLE_CLIENT_SECRET', 'OauthAppAdminCLientSecretCode')
+MAIL_APP_PASSWORD = get_secret('MAIL_APP_PASSWORD', 'MAIL_APP_PASSWORD')
 
 app = Flask(
     __name__,
@@ -87,9 +91,9 @@ google = oauth.register(
 def add_api_cors_headers(response):
     """Autorise l'application Expo Web locale à appeler les routes API."""
     if request.path.startswith('/api/'):
-        response.headers['Access-Control-Allow-Origin'] = 'http://localhost:8081'
+        response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
-        response.headers['Access-Control-Allow-Headers'] = 'Content-Type'
+        response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
     return response
 
 
@@ -116,8 +120,16 @@ def load_examples():
     """Charge les exemples depuis examples.jsonl"""
     try:
         with (PORTFOLIO_AI_DIR / 'examples.jsonl').open(encoding='utf-8') as f:
-            return [json.loads(line) for line in f]
-    except (FileNotFoundError, json.JSONDecodeError):
+            examples = []
+            for line in f:
+                if not line.strip():
+                    continue
+                try:
+                    examples.append(json.loads(line))
+                except json.JSONDecodeError:
+                    continue
+            return examples
+    except FileNotFoundError:
         return []
 
 
@@ -176,8 +188,13 @@ def index():
     projets=read_projects()
     return render_template('index.html', projets=projets)
 
-@app.route("/api/projets", methods=["POST"])
-def ajouter_projet():
+@app.route("/api/projets", methods=["GET", "POST", "OPTIONS"])
+def gerer_projets():
+    if request.method == "OPTIONS":
+        return "", 204
+    if request.method == "GET":
+        return jsonify(read_projects())
+
     projets = read_projects()
 
     nouveau_projet = request.get_json(silent=True)
@@ -189,7 +206,8 @@ def ajouter_projet():
     sauvegarder_projets(projets)
 
     return jsonify({
-        "message": "Projet ajouté !"
+        "message": "Projet ajouté !",
+        "projets": projets
     })
 
 def _index_to_int(index):
@@ -216,8 +234,10 @@ def reorder_index(projets, index_supprime):
             projet["index"] = _format_index(index_projet - 1, projet["index"])
 
 
-@app.route("/api/projetssupp", methods=["POST"])
+@app.route("/api/projetssupp", methods=["POST", "OPTIONS"])
 def supprimer_projet():
+    if request.method == "OPTIONS":
+        return "", 204
     donnees = request.get_json(silent=True) or {}
     nom = donnees.get("nom")
     index = _index_to_int(donnees.get("index"))
@@ -244,7 +264,8 @@ def supprimer_projet():
     sauvegarder_projets(projets)
 
     return jsonify({
-        "message": "Projet supprimé"
+        "message": "Projet supprimé",
+        "projets": projets
     })
 
 
@@ -272,10 +293,10 @@ def envoi_email():
 
 @app.route('/api/ai', methods=['POST'])
 def ai_bot():
-    data = request.get_json()
+    data = request.get_json(silent=True) or {}
     user_prompt = data.get('prompt', '')
     
-    if not user_prompt:
+    if not isinstance(user_prompt, str) or not user_prompt.strip():
         return jsonify({'response': 'Le prompt est vide.'}), 400
     
     ai_response = generate_ai_response(user_prompt)

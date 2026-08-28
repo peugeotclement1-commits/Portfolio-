@@ -48,7 +48,6 @@
   </div>
 </section>
 
-
 <section id="projects">
   <div class="section-head reveal-left">
     <div>
@@ -58,27 +57,29 @@
     <div class="section-count">{{ projets | length }} sélectionnés</div>
   </div>
 
-  {% for projet in projets %}
-  <div class="projects-grid">
-  <div class="project-card reveal-up">
-    <div class="project-content">
-      <div class="project-index">{{projet.index}}</div>
-      <div class="project-name">{{projet.nom}}</div>
-      <p class="project-desc">{{projet.description}}</p>
-      <div class="project-meta">
-        {% for tag in projet.tags %}
-        <div class="project-tags"><span>{{tag}}</span></div>
-        {% endfor %}
-        
-        <a href="{{projet.lien}}" target="_blank" rel="noopener noreferrer" class="project-arrow-link">
-          <span class="project-arrow">↗</span>
-        </a>
-
+  <div class="projects-container">
+    <div class="projects-grid">
+      {% for projet in projets %}
+      <div class="project-card reveal-up">
+        <div class="project-content">
+          <div class="project-index">{{ projet.index }}</div>
+          <div class="project-name">{{ projet.nom }}</div>
+          <p class="project-desc">{{ projet.description }}</p>
+          <div class="project-meta">
+            {% for tag in projet.tags %}
+            <div class="project-tags"><span>{{ tag }}</span></div>
+            {% endfor %}
+            
+            <a href="{{ projet.lien }}" target="_blank" rel="noopener noreferrer" class="project-arrow-link">
+              <span class="project-arrow">↗</span>
+            </a>
+          </div>
+        </div>
       </div>
+      {% endfor %}
     </div>
   </div>
-
-{% endfor %}
+</section>
 
 <section class="about" id="about">
   <div class="section-head reveal-right">
@@ -106,6 +107,21 @@
         <i class="devicon-javascript-plain colored"></i>
         <span>JavaScript</span>
         <div class="tech-desc-zone">Logique front-end dynamique, asynchronisme et manipulations d'API.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-typescript-plain colored"></i>
+        <span>TypeScript</span>
+        <div class="tech-desc-zone">Typage statique avancé pour des applications JavaScript robustes et maintenables.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-react-original colored"></i>
+        <span>React</span>
+        <div class="tech-desc-zone">Création d'interfaces utilisateur modernes, modulaires et performantes.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-json-plain colored"></i>
+        <span>JSON</span>
+        <div class="tech-desc-zone">Format standard d'échange et de persistance de données structurées.</div>
       </div>
       <div class="carousel-item clickable-item">
         <i class="devicon-python-plain colored"></i>
@@ -167,6 +183,21 @@
         <i class="devicon-javascript-plain colored"></i>
         <span>JavaScript</span>
         <div class="tech-desc-zone">Logique front-end dynamique, asynchronisme et manipulations d'API.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-typescript-plain colored"></i>
+        <span>TypeScript</span>
+        <div class="tech-desc-zone">Typage statique avancé pour des applications JavaScript robustes et maintenables.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-react-original colored"></i>
+        <span>React</span>
+        <div class="tech-desc-zone">Création d'interfaces utilisateur modernes, modulaires et performantes.</div>
+      </div>
+      <div class="carousel-item clickable-item">
+        <i class="devicon-json-plain colored"></i>
+        <span>JSON</span>
+        <div class="tech-desc-zone">Format standard d'échange et de persistance de données structurées.</div>
       </div>
       <div class="carousel-item clickable-item">
         <i class="devicon-python-plain colored"></i>

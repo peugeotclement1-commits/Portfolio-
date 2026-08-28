@@ -362,15 +362,44 @@ h1 .outline {
   margin-bottom: 20px;
 }
 
+/* Conteneur limitant à 6 projets (2 rangées de 3) avec scrollbar au-delà */
+.projects-container {
+  max-height: 563px; /* 2 rangées de 280px + gaps et bordures */
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 6px;
+  padding-bottom: 2px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) rgba(16, 21, 31, 0.8);
+}
+
+/* Style de la scrollbar personnalisée (Webkit) */
+.projects-container::-webkit-scrollbar {
+  width: 6px;
+}
+
+.projects-container::-webkit-scrollbar-track {
+  background: rgba(16, 21, 31, 0.6);
+  border-radius: 4px;
+}
+
+.projects-container::-webkit-scrollbar-thumb {
+  background: var(--accent);
+  border-radius: 4px;
+  box-shadow: 0 0 8px var(--accent-dim);
+}
+
+.projects-container::-webkit-scrollbar-thumb:hover {
+  background: #7fffe8;
+  box-shadow: 0 0 14px var(--accent);
+}
+
 .projects-grid { 
   display: grid; 
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); 
+  grid-template-columns: repeat(3, 1fr); 
   gap: 1px; 
   background-color: #03050a; /* Couleur de la carte, * 1/1.75 de brightness pour inverser l'effet de brightness de #project */
   position: relative;
-  /* PERMET à la carte agrandie (.is-expanded) de dépasser sans être coupée */
-  overflow: visible; 
-  /* Ajoute 1px en bas pour afficher la bordure du fond de grille tout en bas */
   padding-bottom: 1px; 
 }
 
@@ -386,24 +415,13 @@ h1 .outline {
   justify-content: flex-end;
   height: 280px; 
 
-  /* S'assure que l'animation d'agrandissement se fait vers le bas proprement */
+  /* S'assure que la hauteur reste stable proprement */
   align-self: start;
 
-  transition: height 0.4s cubic-bezier(0.25, 1, 0.5, 1), 
-              border-color 0.3s ease, 
+  transition: border-color 0.3s ease, 
               box-shadow 0.3s ease;
   z-index: 1;
 }
-
-
-.project-card.is-expanded {
-  height: 480px;
-  border-color: var(--bg);
-  z-index: 10;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(94, 234, 212, 0.15);
-  margin-bottom: -200px;
-}
-
 
 .project-card:hover {
   border-color: var(--accent);
@@ -813,6 +831,15 @@ footer {
   z-index: 1; 
 }
 
+@media (max-width: 992px) {
+  .projects-grid { 
+    grid-template-columns: repeat(2, 1fr); 
+  }
+  .projects-container {
+    max-height: calc(280px * 3 + 6px); /* 3 rangées de 2 cartes = 6 projets */
+  }
+}
+
 @media (max-width: 860px) {
   nav ul { display: none; }
   .contact-wrap { grid-template-columns: 1fr; gap: 48px; }
@@ -820,6 +847,15 @@ footer {
   
   /* Ajustements responsive pour le About */
   .about-content-wrapper { gap: 30px; }
+}
+
+@media (max-width: 640px) {
+  .projects-grid { 
+    grid-template-columns: 1fr; 
+  }
+  .projects-container {
+    max-height: calc(280px * 3 + 6px);
+  }
 }
 
 /* ==========================================================================

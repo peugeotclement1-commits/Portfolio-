@@ -1661,20 +1661,3 @@ document.addEventListener('DOMContentLoaded', () => {
     elementsToReveal.forEach((el) => {
         scrollObserver.observe(el);
     });
-
-
-    document.addEventListener('DOMContentLoaded', () => {
-    const projectCards = document.querySelectorAll('.project-card');
-
-    projectCards.forEach((card) => {
-        // Quand la souris entre sur la carte
-        card.addEventListener('mouseenter', () => {
-        card.classList.add('is-expanded');
-        });
-
-        // Quand la souris sort de la carte
-        card.addEventListener('mouseleave', () => {
-        card.classList.remove('is-expanded');
-        });
-    });
-    });
