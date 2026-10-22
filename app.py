@@ -4,7 +4,7 @@
 
 
 from pathlib import Path
-from flask import Flask, render_template, request, jsonify, redirect, url_for, session
+from flask import Flask, render_template, request, jsonify
 from flask_mail import Mail, Message
 from authlib.integrations.flask_client import OAuth
 import importlib.util
@@ -12,8 +12,6 @@ import os
 import ollama
 import json
 import re
-import base64
-import requests
 
 #####################################################
 ######################## PATHS ######################
@@ -24,7 +22,6 @@ SITE_DIR = BASE_DIR / 'site'
 PORTFOLIO_AI_DIR = SITE_DIR / 'portfolio-ai'
 STOCK_FILE = BASE_DIR / 'stock.json'
 DEL_FILE = BASE_DIR / 'del.json'
-TOKEN_FILE = BASE_DIR / 'gmail_token.json'
 SECRETS_FILE = Path(
     os.environ.get('MONSITE_SECRETS_FILE', BASE_DIR.parent / 'mdp' / 'mdp.py')
 ).expanduser().resolve()
@@ -63,7 +60,6 @@ app = Flask(
     template_folder=str(SITE_DIR / 'templates'),
     static_folder=str(SITE_DIR / 'static'),
 )
-app.secret_key = get_secret('FLASK_SECRET_KEY', 'FLASK_SECRET_KEY') or 'monsite-secret-key-2026'
 
 # --- CONFIGURATION DE FLASK-MAIL ---
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
@@ -79,6 +75,7 @@ mail = Mail(app)
 ################# OAuth config #################
 ################################################
 
+
 oauth = OAuth(app)
 google = oauth.register(
     name='google',
@@ -86,14 +83,14 @@ google = oauth.register(
     client_secret=GOOGLE_CLIENT_SECRET,
     server_metadata_url='https://accounts.google.com/.well-known/openid-configuration',
     client_kwargs={
-        'scope': 'openid email profile https://www.googleapis.com/auth/gmail.readonly'
+        'scope': 'openid email profile'
     }
 )
 
 @app.after_request
 def add_api_cors_headers(response):
     """Autorise l'application Expo Web locale à appeler les routes API."""
-    if request.path.startswith('/api/') or request.path.startswith('/auth/'):
+    if request.path.startswith('/api/'):
         response.headers['Access-Control-Allow-Origin'] = '*'
         response.headers['Access-Control-Allow-Methods'] = 'GET, POST, OPTIONS'
         response.headers['Access-Control-Allow-Headers'] = 'Content-Type, Authorization'
@@ -273,172 +270,6 @@ def supprimer_projet():
 
 
         
-
-
-#####################################################################
-############################# OAUTH & GMAIL #########################
-#####################################################################
-
-def extract_body(payload):
-    """Extrait le contenu texte d'un payload de message Gmail."""
-    body = ""
-    if 'parts' in payload:
-        for part in payload['parts']:
-            if part.get('mimeType') == 'text/plain' and 'data' in part.get('body', {}):
-                try:
-                    body += base64.urlsafe_b64decode(part['body']['data']).decode('utf-8', errors='ignore')
-                except Exception:
-                    pass
-            elif 'parts' in part:
-                body += extract_body(part)
-    elif 'body' in payload and 'data' in payload['body']:
-        try:
-            body = base64.urlsafe_b64decode(payload['body']['data']).decode('utf-8', errors='ignore')
-        except Exception:
-            pass
-    return body.strip()
-
-
-def load_gmail_token():
-    if not TOKEN_FILE.is_file():
-        return None
-    try:
-        with TOKEN_FILE.open('r', encoding='utf-8') as f:
-            return json.load(f)
-    except Exception:
-        return None
-
-
-def refresh_gmail_token(token):
-    if not token or 'refresh_token' not in token:
-        return token
-    try:
-        data = {
-            'client_id': GOOGLE_CLIENT_ID,
-            'client_secret': GOOGLE_CLIENT_SECRET,
-            'refresh_token': token['refresh_token'],
-            'grant_type': 'refresh_token'
-        }
-        res = requests.post('https://oauth2.googleapis.com/token', data=data, timeout=5)
-        if res.ok:
-            new_data = res.json()
-            token['access_token'] = new_data.get('access_token', token.get('access_token'))
-            with TOKEN_FILE.open('w', encoding='utf-8') as f:
-                json.dump(token, f, indent=4)
-    except Exception as e:
-        print("Erreur lors du refresh token :", e)
-    return token
-
-
-@app.route('/auth/login')
-def auth_login():
-    redirect_uri = url_for('auth_callback', _external=True)
-    return google.authorize_redirect(redirect_uri, access_type='offline', prompt='consent')
-
-
-@app.route('/auth/callback')
-def auth_callback():
-    try:
-        token = google.authorize_access_token()
-        with TOKEN_FILE.open('w', encoding='utf-8') as f:
-            json.dump(token, f, indent=4)
-    except Exception as e:
-        print("Erreur auth_callback :", e)
-    return redirect('http://localhost:8081')
-
-
-@app.route('/auth/logout', methods=['GET', 'POST', 'OPTIONS'])
-def auth_logout():
-    if request.method == 'OPTIONS':
-        return '', 204
-    if TOKEN_FILE.is_file():
-        try:
-            TOKEN_FILE.unlink()
-        except Exception:
-            pass
-    return jsonify({'authenticated': False, 'message': 'Déconnecté avec succès.'})
-
-
-@app.route('/api/gmail/status')
-def gmail_status():
-    token = load_gmail_token()
-    if not token or 'access_token' not in token:
-        return jsonify({'authenticated': False})
-    
-    userinfo = token.get('userinfo') or {}
-    email = userinfo.get('email')
-    if not email:
-        try:
-            resp = requests.get(
-                'https://www.googleapis.com/oauth2/v2/userinfo',
-                headers={'Authorization': f"Bearer {token['access_token']}"},
-                timeout=5
-            )
-            if resp.ok:
-                email = resp.json().get('email')
-        except Exception:
-            pass
-            
-    return jsonify({
-        'authenticated': True,
-        'email': email or 'peugeotclement1@gmail.com'
-    })
-
-
-@app.route('/api/gmail/messages')
-def gmail_messages():
-    token = load_gmail_token()
-    if not token or 'access_token' not in token:
-        return jsonify({'authenticated': False, 'messages': []})
-
-    headers = {'Authorization': f"Bearer {token['access_token']}"}
-    url = 'https://gmail.googleapis.com/gmail/v1/users/me/messages'
-    params = {'maxResults': 15, 'q': 'label:"Portfolio Contact"'}
-    
-    try:
-        resp = requests.get(url, headers=headers, params=params, timeout=7)
-        if resp.status_code == 401:
-            token = refresh_gmail_token(token)
-            headers = {'Authorization': f"Bearer {token['access_token']}"}
-            resp = requests.get(url, headers=headers, params=params, timeout=7)
-            
-        if not resp.ok:
-            params = {'maxResults': 10}
-            resp = requests.get(url, headers=headers, params=params, timeout=7)
-
-        data = resp.json() if resp.ok else {}
-        message_items = data.get('messages', [])
-        
-        if not message_items:
-            params = {'maxResults': 10, 'q': 'Portfolio'}
-            resp = requests.get(url, headers=headers, params=params, timeout=7)
-            if resp.ok:
-                message_items = resp.json().get('messages', [])
-
-        messages_detail = []
-        for item in message_items:
-            msg_id = item['id']
-            msg_resp = requests.get(f"{url}/{msg_id}?format=full", headers=headers, timeout=5)
-            if msg_resp.ok:
-                msg_data = msg_resp.json()
-                msg_headers = {h['name'].lower(): h['value'] for h in msg_data.get('payload', {}).get('headers', [])}
-                body_text = extract_body(msg_data.get('payload', {}))
-                snippet = msg_data.get('snippet', '')
-                
-                messages_detail.append({
-                    'id': msg_id,
-                    'from': msg_headers.get('from', 'Inconnu'),
-                    'to': msg_headers.get('to', ''),
-                    'subject': msg_headers.get('subject', '(Sans objet)'),
-                    'date': msg_headers.get('date', ''),
-                    'snippet': snippet,
-                    'body': body_text or snippet,
-                    'unread': 'UNREAD' in msg_data.get('labelIds', []),
-                })
-
-        return jsonify({'authenticated': True, 'messages': messages_detail})
-    except Exception as e:
-        return jsonify({'authenticated': True, 'messages': [], 'error': str(e)})
 
 
 @app.route('/envoi', methods=['POST'])

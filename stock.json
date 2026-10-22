@@ -1,11 +1,12 @@
 [
     {
+        "image":"/static/assets/exemple_todolist.png",
         "index": "[ 01 ]",
         "nom": "To Do List App",
         "description": "Application de gestion de listes, création, tri, suppression de tâches.",
         "tags": [
             "FLUTTER"
         ],
-        "lien": "https://peugeotclement1-commits.github.io/ToDoListApp/"
+        "lien": "https://github.com/peugeotclement1-commits/ToDoListApp"
     }
 ]

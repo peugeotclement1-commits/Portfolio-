@@ -62,6 +62,7 @@
       {% for projet in projets %}
       <div class="project-card reveal-up">
         <div class="project-content">
+          <div class="project-image"><img src="{{projet.image}}" alt="" id="imgtodo"></div>
           <div class="project-index">{{ projet.index }}</div>
           <div class="project-name">{{ projet.nom }}</div>
           <p class="project-desc">{{ projet.description }}</p>
