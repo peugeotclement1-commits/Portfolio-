@@ -41,3 +41,295 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+:root {
+  /* ==========================================
+     1. PALETTE DE COULEURS (Néon / Dark Theme)
+     ========================================== */
+  --bg-primary: #060814;          /* Fond principal très sombre / bleu nuit */
+  --bg-secondary: #0b0f19;        /* Fond des cartes et des conteneurs */
+  --bg-glass: rgba(18, 24, 43, 0.7); /* Effet de transparence (Glassmorphism) */
+  --bg-glass-card: rgba(22, 30, 54, 0.4);
+
+  /* Couleurs de texte */
+  --text-main: #ffffff;
+  --text-muted: #94a3b8;          /* Gris ardoise pour les descriptions */
+  --text-dim: #64748b;            /* Gris plus sombre pour les détails */
+
+  /* Accents et Néons */
+  --accent-blue: #3b82f6;         /* Bleu principal (boutons, liens) */
+  --accent-purple: #8b5cf6;       /* Violet / Indigo (dégradés de titres) */
+  --neon-cyan: #06b6d4;           /* Cyan éclatant (glows et éléments actifs) */
+  --neon-blue-glow: rgba(59, 130, 246, 0.4);
+  --neon-cyan-glow: rgba(6, 182, 212, 0.5);
+
+  /* Badges & Tags */
+  --tag-bg: rgba(30, 41, 59, 0.6);
+  --tag-border: rgba(51, 65, 85, 0.5);
+
+  /* ==========================================
+     2. TYPOGRAPHIE
+     ========================================== */
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  
+  /* Échelle de tailles (Mode Desktop par défaut) */
+  --text-hero: clamp(2rem, 4vw, 3.5rem);
+  --text-h2: clamp(1.5rem, 2.5vw, 2rem);
+  --text-body: 0.95rem;
+  --text-small: 0.85rem;
+
+  /* ==========================================
+     3. ESPACEMENT ET MISE EN PAGE (Layout)
+     ========================================== */
+  /* Marges et espacements mobiles */
+  --spacing-mobile-x: 1rem;       /* 16px de padding horizontal sur mobile */
+  --spacing-desktop-x: 2.5rem;    /* 40px de padding sur desktop */
+  
+  --radius-sm: 8px;
+  --radius-md: 14px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+
+  /* ==========================================
+     4. OMBRES ET EFFETS LUMINEUX (Glows)
+     ========================================== */
+  --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
+  --shadow-neon-blue: 0 0 20px var(--neon-blue-glow);
+  --shadow-neon-cyan: 0 0 25px var(--neon-cyan-glow);
+  --border-glass: 1px solid rgba(255, 255, 255, 0.08);
+  --border-glass-active: 1px solid rgba(6, 182, 212, 0.6);
+}
+
+/* ==========================================
+   5. VARIANTES MOBILES (Media Queries / Tokens)
+   ========================================== */
+@media (max-width: 768px) {
+  :root {
+    /* Ajustements typographiques pour petits écrans */
+    --text-hero: 1.8rem;
+    --text-h2: 1.3rem;
+    
+    /* Réduction des espacements globaux pour optimiser l'affichage mobile */
+    --spacing-container: var(--spacing-mobile-x);
+  }
+}
+
+
+
+/* ==========================================
+   6. NAVBAR & MENU LATÉRAL (SIDEBAR)
+   ========================================== */
+#navbar {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background-color: var(--bg-secondary);
+    padding: 16px var(--spacing-desktop-x);
+    border-bottom: 1px solid var(--border-glass);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+#title_your {
+    color: var(--text-main);
+    font-family: var(--font-sans);
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+}
+
+#title_dev {
+    color: var(--neon-cyan);
+    font-family: var(--font-sans);
+    font-size: 1.25rem;
+    letter-spacing: 0.5px;
+}
+
+#discoverlinksmobileversion {
+    background-color: var(--tag-bg);
+    border: 1px solid var(--tag-border);
+    color: var(--text-main);
+    padding: 8px 16px;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+    font-family: var(--font-sans);
+    font-size: 0.9rem;
+    font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.2s ease;
+}
+
+#discoverlinksmobileversion:hover {
+    border-color: var(--neon-cyan);
+    color: var(--neon-cyan);
+    box-shadow: 0 0 12px var(--neon-cyan-glow);
+}
+
+/* Sidebar sur le côté de la page */
+#nav_links {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: min(360px, 88vw);
+    height: 100vh;
+    background: linear-gradient(155deg, rgba(17, 24, 43, 0.98), rgba(6, 8, 20, 0.98) 70%);
+    border-left: 1px solid rgba(6, 182, 212, 0.24);
+    box-shadow: -18px 0 50px rgba(0, 0, 0, 0.45), -1px 0 24px rgba(6, 182, 212, 0.08);
+    padding: 30px 24px;
+    z-index: 1000;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(28px);
+    transition: transform 320ms cubic-bezier(0.22, 1, 0.36, 1),
+                opacity 220ms ease,
+                visibility 0s linear 320ms;
+}
+
+#nav_links.notdisplay {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transform: translateX(28px);
+}
+
+#nav_links.display {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transform: translateX(0);
+    transition-delay: 0s;
+}
+
+.nav-links-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 28px;
+    padding-bottom: 18px;
+    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+}
+
+.nav-links-title {
+    font-family: 'Space Grotesk', var(--font-sans);
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #a5f3fc;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+}
+
+.close-nav-btn {
+    display: grid;
+    place-items: center;
+    width: 38px;
+    height: 38px;
+    background: rgba(148, 163, 184, 0.08);
+    border: 1px solid rgba(148, 163, 184, 0.14);
+    color: #cbd5e1;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 12px;
+    transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.close-nav-btn:hover {
+    color: #fff;
+    border-color: rgba(6, 182, 212, 0.45);
+    background-color: rgba(6, 182, 212, 0.14);
+    transform: rotate(90deg);
+}
+
+#nav_links ul {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#nav_links ul li a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    min-height: 54px;
+    box-sizing: border-box;
+    color: #dbe4f0;
+    font-family: 'Space Grotesk', var(--font-sans);
+    font-size: 1rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    padding: 9px 12px;
+    border: 1px solid transparent;
+    border-radius: 14px;
+    background: rgba(148, 163, 184, 0.035);
+    text-decoration: none;
+    transition: color 200ms ease, background 200ms ease, border-color 200ms ease, transform 200ms ease, box-shadow 200ms ease;
+}
+
+#nav_links ul li a:hover {
+    color: #fff;
+    border-color: rgba(6, 182, 212, 0.24);
+    background: linear-gradient(100deg, rgba(6, 182, 212, 0.15), rgba(139, 92, 246, 0.09));
+    box-shadow: inset 3px 0 0 #22d3ee, 0 8px 22px rgba(0, 0, 0, 0.18);
+    transform: translateX(-4px);
+}
+
+.nav-link-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 36px;
+    width: 36px;
+    height: 36px;
+    color: #67e8f9;
+    border: 1px solid rgba(6, 182, 212, 0.18);
+    border-radius: 11px;
+    background: rgba(6, 182, 212, 0.08);
+    transition: color 200ms ease, background 200ms ease, transform 200ms ease;
+}
+
+.nav-link-icon svg {
+    width: 18px;
+    height: 18px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+#nav_links ul li a:hover .nav-link-icon {
+    color: #fff;
+    background: rgba(6, 182, 212, 0.22);
+    transform: scale(1.06);
+}
+
+.nav-link-arrow {
+    margin-left: auto;
+    color: #64748b;
+    font-size: 0.9rem;
+    opacity: 0;
+    transform: translate(-4px, 4px);
+    transition: color 200ms ease, opacity 200ms ease, transform 200ms ease;
+}
+
+#nav_links ul li a:hover .nav-link-arrow {
+    color: #67e8f9;
+    opacity: 1;
+    transform: translate(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+    #nav_links,
+    #nav_links *,
+    #discoverlinksmobileversion {
+        transition-duration: 0.01ms !important;
+    }
+}
