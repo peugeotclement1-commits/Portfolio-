@@ -8,40 +8,87 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/static/index.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/devicon.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 <body>
 
-<navbar id="navbar">
-  <div><p><b><span id="title_your">YOUR</span><span id="title_dev">Dev</span></b></p></div>
-  <button id="discoverlinksmobileversion" onclick="openlinks()">☰ Menu</button>
-  <nav id="nav_links" class="notdisplay">
-    <div class="nav-links-header">
-      <span class="nav-links-title">Explorer</span>
-      <button type="button" class="close-nav-btn" onclick="openlinks()" aria-label="Fermer le menu">✕</button>
-    </div>
-    <ul>
-      <div id="me" alt=""></div>
-      <li><a href="#accueil"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-6v-7h-4v7H4a1 1 0 0 1-1-1z"/></svg></span><span>Accueil</span><span class="nav-link-arrow" aria-hidden="true">↗</span></a></li>
-      <li><a href="#projects"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="8" height="8" rx="2"/><rect x="13" y="3" width="8" height="5" rx="2"/><rect x="13" y="10" width="8" height="11" rx="2"/><rect x="3" y="13" width="8" height="8" rx="2"/></svg></span><span>Projets</span><span class="nav-link-arrow" aria-hidden="true">↗</span></a></li>
-      <li><a href="#about"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M5 21v-2a7 7 0 0 1 14 0v2z"/></svg></span><span>À propos</span><span class="nav-link-arrow" aria-hidden="true">↗</span></a></li>
-      <li><a href="#contact"><span class="nav-link-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span><span>Contact</span><span class="nav-link-arrow" aria-hidden="true">↗</span></a></li>
-      <div id="bot">
-        <div id="top_bar">
-          <img src="" alt="ImageCerveauAI" id="image_cerveauAI">
-          <p id="title_assistantAI">Assistant AI</p>
-        </div>
-        <div id="champ"> 
-        </div>
-        <div div="input_user">
-          <label for="userinput" style="display: none;"></label>l
-          <input type="text" name="userinput" placeholder="Votre question" alt="userinput"/>
-          <button id="buttonenvoieprompt" alt="buttonenvoieprompt"><img src="" alt="buttonenvoie"></button>
-        </div>
+<header class="app-header">
+    <div class="brand-container">
+      <div class="brand-icon">&lt;/&gt;</div>
+      <div class="brand-titles">
+        <h1 class="title-yourdev"><span>YOUR</span><span>Dev</span></h1>
+        <span class="subtitle-author">Clement Peugeot</span>
       </div>
-    </ul>
-  </nav>
+    </div>
+    <button class="menu-trigger" id="openMenu"><i class="fa-solid fa-bars"></i></button>
+  </header>
+  <!-- OVERLAY & MENU LATÉRAL (DRAWER) -->
+  <div class="drawer-overlay" id="drawerOverlay"></div>
+  
+  <aside class="nav-drawer" id="navDrawer">
+    <!-- 1. En-tête avec bouton pour quitter le menu (X) -->
+    <div class="drawer-header">
+      <span class="drawer-title">NAVIGATION</span>
+      <button class="drawer-close" id="closeMenu" aria-label="Quitter le menu">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
 
-</navbar>
+    <!-- 2. Profil -->
+    <div class="profile-card">
+      <div class="avatar-cp">
+        CP
+        <span class="status-dot"></span>
+      </div>
+      <div class="profile-info">
+        <span class="profile-name">Clement Peugeot</span>
+        <span class="profile-role">Dev</span>
+      </div>
+    </div>
+
+    <!-- 3. Liste de navigation (Sans background) -->
+    <div class="nav-list-box">
+      <ul class="nav-list">
+        <li><a href="#accueil" class="nav-link"><i class="fa-solid fa-house"></i> Accueil</a></li>
+        <li><a href="#projects" class="nav-link"><i class="fa-solid fa-code"></i> Projets</a></li>
+        <li><a href="#about" class="nav-link"><i class="fa-solid fa-layer-group"></i> Tech Stack</a></li>
+        <li><a href="#about" class="nav-link"><i class="fa-regular fa-user"></i> À propos</a></li>
+        <li><a href="#contact" class="nav-link"><i class="fa-solid fa-envelope"></i> Contact</a></li>
+      </ul>
+    </div>
+
+    <!-- 4. Assistant IA (Cerveau + Bouton d'envoi prompt) -->
+    <div class="ai-assistant-card">
+      <div class="ai-header">
+        <div class="brain-icon-badge">
+          <i class="fa-solid fa-brain"></i>
+        </div>
+        <span class="ai-title">Assistant IA</span>
+      </div>
+      <div class="chat-container" id="chatContainer">
+        <div class="chat-bubble bot">Bonjour ! Une question sur mon parcours ?</div>
+      </div>
+      <div class="input-user-container">
+        <input type="text" id="userInput" placeholder="Votre prompt..." />
+        <button class="btn-send" id="sendBtn" aria-label="Envoyer le prompt">
+          <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 5. Icônes réseaux sociaux (GitHub, LinkedIn, Mail) -->
+    <div class="drawer-footer">
+      <a href="https://github.com" target="_blank" class="social-icon" aria-label="GitHub">
+        <i class="fa-brands fa-github"></i>
+      </a>
+      <a href="https://linkedin.com" target="_blank" class="social-icon" aria-label="LinkedIn">
+        <i class="fa-brands fa-linkedin"></i>
+      </a>
+      <a href="mailto:clement@example.com" class="social-icon" aria-label="Mail">
+        <i class="fa-solid fa-envelope"></i>
+      </a>
+    </div>
+  </aside>
 
 <section class="hero" id="accueil">
   
@@ -49,11 +96,16 @@
   
   <div class="hero-content">
     <div class="eyebrow">DISPONIBLE POUR DE NOUVEAUX PROJETS</div>
-    <h1>Je construis des<br>systèmes <span class="outline">robustes</span>,<br>du serveur à l'écran.</h1>
-    <p class="hero-sub">Développeur full stack. Je construis des sites web et applications de A à Z, design, interface utilisateur, base de donnée, sécurité, authentification, et hébergement. Maitrise de dizaines de languages et ressources et propulsé par l'intelligence artficielle. J'écoute et j'accompagne jusqu'à l'excellence marketing.</p>
+    <h1>Developer<br><span class="outline">IA, Web & App</span></h1>
+    <p class="hero-sub">Building solutions for organisations. Websites, Applications, Automations, AI systems, Databases.</p>
     <div class="hero-actions">
-      <a href="#projects" class="btn btn-primary"><b>Voir mes projets</b></a>
-      <a href="#contact" class="btn btn-ghost"><b>Me contacter</b></a>
+      <a href="#projects" class="btn btn-primary"><b>Voir mes projets <span aria-hidden="true">→</span></b></a>
+      <a href="#contact" class="btn btn-ghost"><b><i class="fa-regular fa-envelope" aria-hidden="true"></i> &nbsp;Me contacter</b></a>
+    </div>
+    <div class="hero-stats" aria-label="Statistiques professionnelles">
+      <div class="hero-stat"><strong>{{ stats.experience_years }}+</strong><span>Années d'exp.</span></div>
+      <div class="hero-stat"><strong>{{ stats.projects_count }}+</strong><span>Projets faits</span></div>
+      <div class="hero-stat"><strong>100%</strong><span>Passionné</span></div>
     </div>
   </div>
   

@@ -5,6 +5,7 @@ const API_URL = "http://localhost:5000";
 const PORTFOLIO_CONTACT_MAIL_URL = "https://mail.google.com/mail/u/0/#label/Portfolio%20Contact";
 
 type ProjectPayload = { index: string; nom: string; description: string; tags: string[]; lien?: string };
+type PortfolioStats = { experience_years: number; projects_count: number };
 
 export default function App() {
   const [addIndex, setAddIndex] = useState("");
@@ -16,6 +17,7 @@ export default function App() {
   const [deleteNom, setDeleteNom] = useState("");
 
   const [projets, setProjets] = useState<ProjectPayload[]>([]);
+  const [stats, setStats] = useState<PortfolioStats>({ experience_years: 2, projects_count: 7 });
 
   const chargerProjets = useCallback(async () => {
     try {
@@ -31,11 +33,24 @@ export default function App() {
     }
   }, []);
 
+  const chargerStats = useCallback(async () => {
+    try {
+      const response = await fetch(`${API_URL}/api/portfolio-stats`);
+      if (response.ok) setStats(await response.json());
+    } catch {
+      // Garde les dernières valeurs reçues si l'API Flask est indisponible.
+    }
+  }, []);
+
   useEffect(() => {
     chargerProjets();
-    const interval = setInterval(chargerProjets, 1500);
+    chargerStats();
+    const interval = setInterval(() => {
+      chargerProjets();
+      chargerStats();
+    }, 1500);
     return () => clearInterval(interval);
-  }, [chargerProjets]);
+  }, [chargerProjets, chargerStats]);
 
   async function envoyer(path: string, body: ProjectPayload | Pick<ProjectPayload, "index" | "nom">) {
     const response = await fetch(`${API_URL}${path}`, {
@@ -90,6 +105,22 @@ export default function App() {
       setDeleteIndex("");
       setDeleteNom("");
       chargerProjets();
+    } catch (error) {
+      Alert.alert("Erreur", error instanceof Error ? error.message : "Une erreur est survenue.");
+    }
+  }
+
+  async function sauvegarderStats() {
+    try {
+      const response = await fetch(`${API_URL}/api/portfolio-stats`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(stats),
+      });
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message ?? "La mise à jour a échoué.");
+      setStats(data.stats);
+      Alert.alert("Statistiques mises à jour", "Les chiffres du portfolio sont enregistrés.");
     } catch (error) {
       Alert.alert("Erreur", error instanceof Error ? error.message : "Une erreur est survenue.");
     }
@@ -169,6 +200,30 @@ export default function App() {
             </View>
           </View>
 
+          <Text style={styles.sectionTitle}>Statistiques du portfolio :</Text>
+          <View style={styles.separator} />
+          <View style={styles.statsEditor}>
+            <View style={styles.statInputGroup}>
+              <Text style={styles.statLabel}>Années d’expérience</Text>
+              <TextInput
+                style={styles.statInput}
+                value={String(stats.experience_years)}
+                onChangeText={(value) => setStats((current) => ({ ...current, experience_years: Number(value) || 0 }))}
+                keyboardType="number-pad"
+              />
+            </View>
+            <View style={styles.statInputGroup}>
+              <Text style={styles.statLabel}>Projets réalisés</Text>
+              <TextInput
+                style={styles.statInput}
+                value={String(stats.projects_count)}
+                onChangeText={(value) => setStats((current) => ({ ...current, projects_count: Number(value) || 0 }))}
+                keyboardType="number-pad"
+              />
+            </View>
+            <ActionButton label="Enregistrer les statistiques" onPress={sauvegarderStats} />
+          </View>
+
           <Text style={styles.sectionTitle}>Contact :</Text>
           <View style={styles.separator} />
           <Pressable
@@ -187,7 +242,7 @@ export default function App() {
         <View style={styles.card}>
           <Text style={styles.title}>Stock JSON live</Text>
           <ScrollView style={styles.jsonScrollView} nestedScrollEnabled>
-            <Text style={styles.jsonText}>{JSON.stringify(projets, null, 4)}</Text>
+            <Text style={styles.jsonText}>{JSON.stringify({ stats, projets }, null, 4)}</Text>
           </ScrollView>
         </View>
       </ScrollView>
@@ -252,6 +307,28 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "stretch",
     marginBottom: 17,
+  },
+  statsEditor: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+    marginBottom: 18,
+  },
+  statInputGroup: {
+    flex: 1,
+    minWidth: 0,
+  },
+  statLabel: {
+    marginBottom: 5,
+    fontSize: 11,
+    color: "#333333",
+  },
+  statInput: {
+    height: 42,
+    paddingHorizontal: 8,
+    borderWidth: 1,
+    borderColor: "#8b8b8b",
+    color: "#202020",
   },
   addColumn: {
     height: 350,

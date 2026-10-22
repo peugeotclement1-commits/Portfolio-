@@ -1,102 +1,61 @@
-/**
- * Ouvre ou ferme le menu de navigation latéral (sidebar) sur le côté de la page.
- */
-function openlinks() {
-    const links = document.getElementById("nav_links");
-    if (!links) return;
+// Événements d'ouverture/fermeture du menu latéral
+    const openMenu = document.getElementById('openMenu');
+    const closeMenu = document.getElementById('closeMenu');
+    const navDrawer = document.getElementById('navDrawer');
+    const drawerOverlay = document.getElementById('drawerOverlay');
 
-    if (links.classList.contains("display")) {
-        links.classList.remove("display");
-        links.classList.add("notdisplay");
-    } else {
-        links.classList.remove("notdisplay");
-        links.classList.add("display");
+    function toggleMenu() {
+      navDrawer.classList.toggle('active');
+      drawerOverlay.classList.toggle('active');
     }
-}
 
-// Alias pour assurer la compatibilité si appelé via open_links()
-function open_links() {
-    openlinks();
-}
+    openMenu.addEventListener('click', toggleMenu);
+    closeMenu.addEventListener('click', toggleMenu);
+    drawerOverlay.addEventListener('click', toggleMenu);
 
-// Gestion des interactions une fois le DOM chargé
-document.addEventListener("DOMContentLoaded", () => {
-    const links = document.getElementById("nav_links");
-    const button = document.getElementById("discoverlinksmobileversion");
+    // Synchronise les chiffres du hero avec les changements de l'application admin.
+    const experienceStat = document.querySelector('.hero-stat:nth-child(1) strong');
+    const projectsStat = document.querySelector('.hero-stat:nth-child(2) strong');
+    async function refreshPortfolioStats() {
+      try {
+        const response = await fetch('/api/portfolio-stats');
+        if (!response.ok) return;
+        const stats = await response.json();
+        if (experienceStat) experienceStat.textContent = `${stats.experience_years}+`;
+        if (projectsStat) projectsStat.textContent = `${stats.projects_count}+`;
+      } catch {
+        // Les valeurs rendues par Flask restent visibles si l'API est indisponible.
+      }
+    }
+    refreshPortfolioStats();
+    window.setInterval(refreshPortfolioStats, 2000);
 
-    // Fermer le menu lors d'un clic sur l'un des liens
-    const navAnchors = document.querySelectorAll("#nav_links a");
-    navAnchors.forEach((a) => {
-        a.addEventListener("click", () => {
-            if (links && links.classList.contains("display")) {
-                links.classList.remove("display");
-                links.classList.add("notdisplay");
-            }
-        });
+    // Interaction envoi du prompt Assistant IA
+    const sendBtn = document.getElementById('sendBtn');
+    const userInput = document.getElementById('userInput');
+    const chatContainer = document.getElementById('chatContainer');
+
+    function handleSend() {
+      const text = userInput.value.trim();
+      if (!text) return;
+
+      const userBubble = document.createElement('div');
+      userBubble.className = 'chat-bubble user';
+      userBubble.textContent = text;
+      chatContainer.appendChild(userBubble);
+      userInput.value = '';
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+
+      setTimeout(() => {
+        const botBubble = document.createElement('div');
+        botBubble.className = 'chat-bubble bot';
+        botBubble.textContent = "Bien reçu ! Je suis à votre disposition.";
+        chatContainer.appendChild(botBubble);
+        chatContainer.scrollTop = chatContainer.scrollHeight;
+      }, 500);
+    }
+
+    sendBtn.addEventListener('click', handleSend);
+    userInput.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') handleSend();
     });
-
-    // Fermer le menu lors d'un clic à l'extérieur de la sidebar
-    document.addEventListener("click", (event) => {
-        if (!links || !links.classList.contains("display")) return;
-
-        const isClickInsideMenu = links.contains(event.target);
-        const isClickOnButton = button && button.contains(event.target);
-
-        if (!isClickInsideMenu && !isClickOnButton) {
-            links.classList.remove("display");
-            links.classList.add("notdisplay");
-        }
-    });
-
-    // Fermer avec la touche Échap
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && links && links.classList.contains("display")) {
-            links.classList.remove("display");
-            links.classList.add("notdisplay");
-        }
-    });
-});
-
-
-// Alias pour assurer la compatibilité si appelé via open_links()
-function open_links() {
-    openlinks();
-}
-
-// Gestion des interactions une fois le DOM chargé
-document.addEventListener("DOMContentLoaded", () => {
-    const links = document.getElementById("nav_links");
-    const button = document.getElementById("discoverlinksmobileversion");
-
-    // Fermer le menu lors d'un clic sur l'un des liens
-    const navAnchors = document.querySelectorAll("#nav_links a");
-    navAnchors.forEach((a) => {
-        a.addEventListener("click", () => {
-            if (links && links.classList.contains("display")) {
-                links.classList.remove("display");
-                links.classList.add("notdisplay");
-            }
-        });
-    });
-
-    // Fermer le menu lors d'un clic à l'extérieur de la sidebar
-    document.addEventListener("click", (event) => {
-        if (!links || !links.classList.contains("display")) return;
-
-        const isClickInsideMenu = links.contains(event.target);
-        const isClickOnButton = button && button.contains(event.target);
-
-        if (!isClickInsideMenu && !isClickOnButton) {
-            links.classList.remove("display");
-            links.classList.add("notdisplay");
-        }
-    });
-
-    // Fermer avec la touche Échap
-    document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && links && links.classList.contains("display")) {
-            links.classList.remove("display");
-            links.classList.add("notdisplay");
-        }
-    });
-});

@@ -21,6 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent
 SITE_DIR = BASE_DIR / 'site'
 PORTFOLIO_AI_DIR = SITE_DIR / 'portfolio-ai'
 STOCK_FILE = BASE_DIR / 'stock.json'
+PORTFOLIO_STATS_FILE = BASE_DIR / 'portfolio_stats.json'
 DEL_FILE = BASE_DIR / 'del.json'
 SECRETS_FILE = Path(
     os.environ.get('MONSITE_SECRETS_FILE', BASE_DIR.parent / 'mdp' / 'mdp.py')
@@ -162,7 +163,7 @@ Réponds comme Clément le ferait, en utilisant les informations ci-dessus."""
             model='mistral',  # ou 'llama2' si vous préférez
             prompt=full_prompt,
             options={
-                'temperature': 0.7,  # 0.0 = déterministe, 1.0 = créatif
+                'temperature': 0.9,  # 0.0 = déterministe, 1.0 = créatif
                 'top_p': 0.9,
             }
         )
@@ -182,11 +183,42 @@ def sauvegarder_projets(projets):
     with STOCK_FILE.open('w', encoding='utf-8') as fichier:
         json.dump(projets, fichier, indent=4, ensure_ascii=False)
 
+
+def read_portfolio_stats():
+    with PORTFOLIO_STATS_FILE.open(encoding='utf-8') as file:
+        return json.load(file)
+
+
+def save_portfolio_stats(stats):
+    with PORTFOLIO_STATS_FILE.open('w', encoding='utf-8') as file:
+        json.dump(stats, file, indent=4, ensure_ascii=False)
+
 # --- ROUTES ---
 @app.route('/')
 def index():
     projets=read_projects()
-    return render_template('index.html', projets=projets)
+    return render_template('index.html', projets=projets, stats=read_portfolio_stats())
+
+
+@app.route('/api/portfolio-stats', methods=['GET', 'POST', 'OPTIONS'])
+def gerer_portfolio_stats():
+    if request.method == 'OPTIONS':
+        return '', 204
+    if request.method == 'GET':
+        return jsonify(read_portfolio_stats())
+
+    donnees = request.get_json(silent=True) or {}
+    try:
+        annees = int(donnees.get('experience_years'))
+        projets = int(donnees.get('projects_count'))
+    except (TypeError, ValueError):
+        return jsonify({'message': 'Les années d’expérience et le nombre de projets doivent être des nombres entiers.'}), 400
+    if annees < 0 or projets < 0:
+        return jsonify({'message': 'Les valeurs ne peuvent pas être négatives.'}), 400
+
+    stats = {'experience_years': annees, 'projects_count': projets}
+    save_portfolio_stats(stats)
+    return jsonify({'message': 'Les statistiques ont été mises à jour.', 'stats': stats})
 
 @app.route("/api/projets", methods=["GET", "POST", "OPTIONS"])
 def gerer_projets():
