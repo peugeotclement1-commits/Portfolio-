@@ -76,18 +76,6 @@
       </div>
     </div>
 
-    <!-- 5. Icônes réseaux sociaux (GitHub, LinkedIn, Mail) -->
-    <div class="drawer-footer">
-      <a href="https://github.com" target="_blank" class="social-icon" aria-label="GitHub">
-        <i class="fa-brands fa-github"></i>
-      </a>
-      <a href="https://linkedin.com" target="_blank" class="social-icon" aria-label="LinkedIn">
-        <i class="fa-brands fa-linkedin"></i>
-      </a>
-      <a href="mailto:clement@example.com" class="social-icon" aria-label="Mail">
-        <i class="fa-solid fa-envelope"></i>
-      </a>
-    </div>
   </aside>
 
 <section class="hero" id="accueil">
@@ -130,21 +118,30 @@
       {% for projet in projets %}
       <div class="project-card reveal-up">
         <div class="project-content">
-          <div class="project-image"><img src="{{projet.image}}" alt="" id="imgtodo"></div>
+          <div class="project-image">
+            {% if projet.image %}
+            <img src="{{ projet.image }}" alt="Aperçu du projet {{ projet.nom }}" loading="lazy">
+            {% else %}
+            <div class="project-image-placeholder" aria-hidden="true"><i class="fa-solid fa-code"></i></div>
+            {% endif %}
+          </div>
           <div class="project-index">{{ projet.index }}</div>
-          <div class="project-name">{{ projet.nom }}</div>
-          <p class="project-desc">{{ projet.description }}</p>
+          <h3 class="project-name"><a href="{{ url_for('emulateur_projet', project_index=projet.index) }}">{{ projet.nom }}</a></h3>
+          {% if projet.description %}<p class="project-desc">{{ projet.description }}</p>{% endif %}
           <div class="project-meta">
-            {% for tag in projet.tags %}
+            {% for tag in projet.tags or [] %}
             <div class="project-tags"><span>{{ tag }}</span></div>
             {% endfor %}
-            
+            {% if projet.lien %}
             <a href="{{ projet.lien }}" target="_blank" rel="noopener noreferrer" class="project-arrow-link">
-              <span class="project-arrow">↗</span>
+              <span class="project-arrow" aria-label="Voir le projet">↗</span>
             </a>
+            {% endif %}
           </div>
         </div>
       </div>
+      {% else %}
+      <p class="projects-empty">Les projets ajoutés depuis l’application apparaîtront ici.</p>
       {% endfor %}
     </div>
   </div>

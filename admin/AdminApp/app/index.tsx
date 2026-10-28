@@ -4,7 +4,16 @@ import { Alert, Linking, Pressable, SafeAreaView, ScrollView, StyleSheet, Text, 
 const API_URL = "http://localhost:5000";
 const PORTFOLIO_CONTACT_MAIL_URL = "https://mail.google.com/mail/u/0/#label/Portfolio%20Contact";
 
-type ProjectPayload = { index: string; nom: string; description: string; tags: string[]; lien?: string };
+type ProjectPayload = {
+  index: string;
+  nom: string;
+  description: string;
+  tags: string[];
+  lien?: string;
+  demo?: string;
+  width?: number;
+  height?: number;
+};
 type PortfolioStats = { experience_years: number; projects_count: number };
 
 export default function App() {
@@ -13,6 +22,9 @@ export default function App() {
   const [description, setDescription] = useState("");
   const [tags, setTags] = useState("");
   const [lien, setLien] = useState("");
+  const [demo, setDemo] = useState("");
+  const [width, setWidth] = useState("390");
+  const [height, setHeight] = useState("844");
   const [deleteIndex, setDeleteIndex] = useState("");
   const [deleteNom, setDeleteNom] = useState("");
 
@@ -71,6 +83,11 @@ export default function App() {
       .trim()
       .split(/\s+/)
       .filter((t) => t.length > 0);
+    const parsedWidth = Number(width);
+    const parsedHeight = Number(height);
+    if (!Number.isInteger(parsedWidth) || parsedWidth < 1 || !Number.isInteger(parsedHeight) || parsedHeight < 1) {
+      return Alert.alert("Dimensions invalides", "La largeur et la hauteur doivent être des nombres entiers positifs.");
+    }
 
     const nouveauProjet: ProjectPayload = {
       index: addIndex,
@@ -78,6 +95,9 @@ export default function App() {
       description,
       tags: parsedTags,
       lien,
+      demo,
+      width: parsedWidth,
+      height: parsedHeight,
     };
     try {
       const data = await envoyer("/api/projets", nouveauProjet);
@@ -88,6 +108,9 @@ export default function App() {
       setDescription("");
       setTags("");
       setLien("");
+      setDemo("");
+      setWidth("390");
+      setHeight("844");
       chargerProjets();
     } catch (error) {
       Alert.alert("Erreur", error instanceof Error ? error.message : "Une erreur est survenue.");
@@ -170,6 +193,31 @@ export default function App() {
                 placeholderTextColor="#8b8b8b"
                 value={lien}
                 onChangeText={setLien}
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Lien de démonstration (URL)"
+                placeholderTextColor="#8b8b8b"
+                value={demo}
+                onChangeText={setDemo}
+                autoCapitalize="none"
+                keyboardType="url"
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Largeur (px)"
+                placeholderTextColor="#8b8b8b"
+                value={width}
+                onChangeText={setWidth}
+                keyboardType="number-pad"
+              />
+              <TextInput
+                style={styles.input}
+                placeholder="Hauteur (px)"
+                placeholderTextColor="#8b8b8b"
+                value={height}
+                onChangeText={setHeight}
+                keyboardType="number-pad"
               />
               <ActionButton label="Ajouter projet" onPress={ajouterProjet} />
             </View>

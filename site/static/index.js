@@ -5,8 +5,9 @@
     const drawerOverlay = document.getElementById('drawerOverlay');
 
     function toggleMenu() {
-      navDrawer.classList.toggle('active');
-      drawerOverlay.classList.toggle('active');
+      const isOpen = navDrawer.classList.toggle('active');
+      drawerOverlay.classList.toggle('active', isOpen);
+      document.documentElement.classList.toggle('menu-open', isOpen);
     }
 
     openMenu.addEventListener('click', toggleMenu);

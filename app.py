@@ -200,6 +200,29 @@ def index():
     return render_template('index.html', projets=projets, stats=read_portfolio_stats())
 
 
+@app.route('/emulateur/<string:project_index>')
+def emulateur_projet(project_index):
+    projet = next(
+        (projet for projet in read_projects() if str(projet.get('index', '')) == project_index),
+        None,
+    )
+    if projet is None:
+        return 'Projet introuvable.', 404
+
+    def dimension(value, default):
+        try:
+            return max(1, min(int(value), 10000))
+        except (TypeError, ValueError):
+            return default
+
+    return render_template(
+        'emulateur_projets.html',
+        projet=projet,
+        width=dimension(projet.get('width'), 1280),
+        height=dimension(projet.get('height'), 800),
+    )
+
+
 @app.route('/api/portfolio-stats', methods=['GET', 'POST', 'OPTIONS'])
 def gerer_portfolio_stats():
     if request.method == 'OPTIONS':
