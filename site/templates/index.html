@@ -57,23 +57,20 @@
       </ul>
     </div>
 
-    <!-- 4. Assistant IA (Cerveau + Bouton d'envoi prompt) -->
     <div class="ai-assistant-card">
       <div class="ai-header">
-        <div class="brain-icon-badge">
-          <i class="fa-solid fa-brain"></i>
-        </div>
+        <div class="brain-icon-badge"><i class="fa-solid fa-brain" aria-hidden="true"></i></div>
         <span class="ai-title">Assistant IA</span>
       </div>
-      <div class="chat-container" id="chatContainer">
+      <div class="chat-container" id="chatContainer" aria-live="polite">
         <div class="chat-bubble bot">Bonjour ! Une question sur mon parcours ?</div>
       </div>
-      <div class="input-user-container">
-        <input type="text" id="userInput" placeholder="Votre prompt..." />
-        <button class="btn-send" id="sendBtn" aria-label="Envoyer le prompt">
-          <i class="fa-solid fa-paper-plane"></i>
+      <form class="input-user-container" id="chatForm">
+        <input type="text" id="userInput" placeholder="Votre question..." aria-label="Votre question à l'assistant" autocomplete="off">
+        <button class="btn-send" id="sendBtn" type="submit" aria-label="Envoyer la question">
+          <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
         </button>
-      </div>
+      </form>
     </div>
 
   </aside>
@@ -110,10 +107,16 @@
       <div class="section-label">Mes Projets</div>
       <div class="section-title">Solutions réelles. </div>
     </div>
-    <div class="section-count">{{ projets | length }} sélectionnés</div>
   </div>
-
+  <p style="margin: 0 0 25px 0" id="project-pre-text">You can have a project demo clicking on the project name.<br>And check out the code if you click the arrow. Those aren't all finished yet.</p>
   <div class="projects-container">
+    <div class="project-filters" role="group" aria-label="Filtrer les projets par thème">
+      <button class="project-filter is-active" type="button" data-project-filter="all" aria-pressed="true">Tous</button>
+      <button class="project-filter" type="button" data-project-filter="automations" aria-pressed="false">Automations</button>
+      <button class="project-filter" type="button" data-project-filter="web" aria-pressed="false">Web</button>
+      <button class="project-filter" type="button" data-project-filter="data" aria-pressed="false">Data</button>
+      <button class="project-filter" type="button" data-project-filter="app" aria-pressed="false">App</button>
+    </div>
     <div class="projects-grid">
       {% for projet in projets %}
       <div class="project-card reveal-up">
@@ -126,7 +129,7 @@
             {% endif %}
           </div>
           <div class="project-index">{{ projet.index }}</div>
-          <h3 class="project-name"><a href="{{ url_for('emulateur_projet', project_index=projet.index) }}">{{ projet.nom }}</a></h3>
+          <h3 class="project-name"><a href="{{ url_for('portfolio.emulateur_projet', project_index=projet.index) }}">{{ projet.nom }}</a></h3>
           {% if projet.description %}<p class="project-desc">{{ projet.description }}</p>{% endif %}
           <div class="project-meta">
             {% for tag in projet.tags or [] %}
@@ -143,6 +146,7 @@
       {% else %}
       <p class="projects-empty">Les projets ajoutés depuis l’application apparaîtront ici.</p>
       {% endfor %}
+      <p class="projects-empty" id="projectsFilterEmpty" aria-live="polite" hidden>Aucun projet ne correspond à ce thème.</p>
     </div>
   </div>
 </section>

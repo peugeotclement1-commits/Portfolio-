@@ -31,32 +31,90 @@
     refreshPortfolioStats();
     window.setInterval(refreshPortfolioStats, 2000);
 
-    // Interaction envoi du prompt Assistant IA
+    // Envoie les questions au chatbot du portfolio.
+    const chatForm = document.getElementById('chatForm');
     const sendBtn = document.getElementById('sendBtn');
     const userInput = document.getElementById('userInput');
     const chatContainer = document.getElementById('chatContainer');
 
-    function handleSend() {
-      const text = userInput.value.trim();
-      if (!text) return;
+    if (chatForm && sendBtn && userInput && chatContainer) {
+      chatForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const text = userInput.value.trim();
+        if (!text || sendBtn.disabled) return;
 
-      const userBubble = document.createElement('div');
-      userBubble.className = 'chat-bubble user';
-      userBubble.textContent = text;
-      chatContainer.appendChild(userBubble);
-      userInput.value = '';
-      chatContainer.scrollTop = chatContainer.scrollHeight;
+        const userBubble = document.createElement('div');
+        userBubble.className = 'chat-bubble user';
+        userBubble.textContent = text;
+        chatContainer.appendChild(userBubble);
+        userInput.value = '';
 
-      setTimeout(() => {
-        const botBubble = document.createElement('div');
-        botBubble.className = 'chat-bubble bot';
-        botBubble.textContent = "Bien reçu ! Je suis à votre disposition.";
-        chatContainer.appendChild(botBubble);
+        const pendingBubble = document.createElement('div');
+        pendingBubble.className = 'chat-bubble bot pending';
+        pendingBubble.textContent = 'Je réfléchis…';
+        chatContainer.appendChild(pendingBubble);
         chatContainer.scrollTop = chatContainer.scrollHeight;
-      }, 500);
+        sendBtn.disabled = true;
+
+        try {
+          const response = await fetch('/api/ai', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ prompt: text })
+          });
+          const data = await response.json();
+          pendingBubble.textContent = data.response || 'Je n’ai pas pu générer de réponse.';
+        } catch {
+          pendingBubble.textContent = 'Impossible de contacter l’assistant pour le moment.';
+        } finally {
+          pendingBubble.classList.remove('pending');
+          sendBtn.disabled = false;
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+          userInput.focus();
+        }
+      });
     }
 
-    sendBtn.addEventListener('click', handleSend);
-    userInput.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') handleSend();
+    const projectCards = Array.from(document.querySelectorAll('.project-card'));
+    const projectFilters = document.querySelectorAll('[data-project-filter]');
+    const projectCount = document.getElementById('projectCount');
+    const filterEmpty = document.getElementById('projectsFilterEmpty');
+    const themePatterns = {
+      automations: /\b(automation|automations|automatisation|automatisations|workflow|workflows|n8n|zapier|make\.com)\b/,
+      web: /\b(web|website|websites|site|sites|html|css|javascript|react|vue|flask|django|wordpress|frontend|backend|api)\b/,
+      data: /\b(data|donnee|donnees|database|databases|sql|mongodb|postgresql|mysql|analytics|etl|json|power bi)\b/,
+      app: /\b(app|application|applications|mobile|flutter|android|ios|electron|desktop)\b/
+    };
+
+    function normalizeProjectText(text) {
+      return text.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+    }
+
+    function filterProjects(theme) {
+      let visibleCount = 0;
+      projectCards.forEach((card) => {
+        const searchableText = normalizeProjectText(
+          Array.from(card.querySelectorAll('.project-name, .project-desc, .project-tags'))
+            .map((element) => element.textContent)
+            .join(' ')
+        );
+        const isVisible = theme === 'all' || themePatterns[theme].test(searchableText);
+        card.hidden = !isVisible;
+        if (isVisible) visibleCount += 1;
+      });
+
+      projectFilters.forEach((button) => {
+        const isActive = button.dataset.projectFilter === theme;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-pressed', String(isActive));
+      });
+
+      if (projectCount) {
+        projectCount.textContent = `${visibleCount} projet${visibleCount === 1 ? '' : 's'} affiché${visibleCount === 1 ? '' : 's'}`;
+      }
+      if (filterEmpty) filterEmpty.hidden = visibleCount > 0 || projectCards.length === 0;
+    }
+
+    projectFilters.forEach((button) => {
+      button.addEventListener('click', () => filterProjects(button.dataset.projectFilter));
     });
