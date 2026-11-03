@@ -128,7 +128,6 @@
             <div class="project-image-placeholder" aria-hidden="true"><i class="fa-solid fa-code"></i></div>
             {% endif %}
           </div>
-          <div class="project-index">{{ projet.index }}</div>
           <h3 class="project-name"><a href="{{ url_for('portfolio.emulateur_projet', project_index=projet.index) }}">{{ projet.nom }}</a></h3>
           {% if projet.description %}<p class="project-desc">{{ projet.description }}</p>{% endif %}
           <div class="project-meta">
@@ -154,14 +153,17 @@
 <section class="about" id="about">
   <div class="section-head reveal-right">
     <div class="section-left">
-      <span class="section-label">// 02 . STACK SPRINT</span>
+      <span class="section-label">STACK SPRINT</span>
       <h2 class="section-title">Technologies & Langages</h2>
     </div>
-    <span class="section-count">02</span>
   </div>
 
-  <div class="carousel-container">
-    <div class="carousel-track" id="carouselTrack">
+  <div class="carousel-wrapper">
+    <button class="carousel-nav-btn carousel-nav-prev" id="carouselPrev" aria-label="Défiler vers la gauche" type="button">
+      <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+    </button>
+    <div class="carousel-container" id="carouselContainer">
+      <div class="carousel-track" id="carouselTrack">
       
       <div class="carousel-item clickable-item">
         <i class="devicon-html5-plain colored"></i>
@@ -316,13 +318,17 @@
       </div>
 
     </div>
+    </div>
+    <button class="carousel-nav-btn carousel-nav-next" id="carouselNext" aria-label="Défiler vers la droite" type="button">
+      <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+    </button>
   </div>
 </section>
 
 <section id="contact">
   <div class="section-head reveal-left">
     <div>
-      <div class="section-label">// 03 — CONTACT</div>
+      <div class="section-label">CONTACT</div>
       <div class="section-title">Parlons de votre projet</div>
     </div>
   </div>
@@ -330,28 +336,34 @@
   <div class="contact-wrap">
     <div class="contact-info reveal-left">
       <p>Une idée, un projet, une opportunité ? N'hésitez pas à m'écrire — je réponds généralement sous 48h.</p>
-      <div class="contact-links">
-        <a href="mailto:contact@exemple.com">peugeotclement1@gmail.com ↗</a>
-        <a href="https://github.com/peugeotclement1-commits" target="_blank">github.com/CLEXDEV ↗</a>
-        <a href="#">linkedin.com/in/votreprofil ↗</a>
-      </div>
     </div>
     
     <form id="contact-form" action="/envoi" method="POST" class="reveal-right">
       <div class="field">
-        <label for="name">NOM</label>
-        <input type="text" id="name" name="name" required>
+        <label for="name" display ="none">NOM</label>
+        <input type="text" id="name" name="name" placeholder="Votre nom" required>
       </div>
       <div class="field">
-        <label for="email">EMAIL</label>
-        <input type="email" id="email" name="email" required>
+        <label for="email" display ="none">EMAIL</label>
+        <input type="email" id="email" name="email" placeholder="votre@email.com" required>
       </div>
       <div class="field">
-        <label for="message">MESSAGE</label>
-        <textarea id="message" name="message" rows="5" required></textarea>
+        <label for="message" display ="none">MESSAGE</label>
+        <textarea id="message" name="message" rows="5" placeholder="Votre message..." required></textarea>
       </div>
       <div class="submit-row">
-        <button type="submit" class="btn btn-primary">Envoyer le message</button>
+        <button type="submit" class="btn btn-primary">
+          <span>Envoyer le message</span>
+          <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+        </button>
+        <div class="contact-social-buttons">
+          <a href="https://github.com/peugeotclement1-commits" target="_blank" rel="noopener noreferrer" class="btn-social" aria-label="Mon profil GitHub" title="GitHub">
+            <i class="fa-brands fa-github"></i>
+          </a>
+          <a href="https://www.linkedin.com/in/peugeotclement" target="_blank" rel="noopener noreferrer" class="btn-social" aria-label="Mon profil LinkedIn" title="LinkedIn">
+            <i class="fa-brands fa-linkedin-in"></i>
+          </a>
+        </div>
       </div>
     </form>
     
