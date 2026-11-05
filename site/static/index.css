@@ -535,6 +535,7 @@ table {
       min-height: 560px;
       display: flex;
       align-items: center;
+      justify-content: center;
       padding: 6.5rem clamp(1.25rem, 5vw, 4rem) 4rem;
       overflow: hidden;
       background: linear-gradient(180deg, #0b0e17 0%, #090d18 50%, #080b15 100%);
@@ -649,6 +650,9 @@ table {
       color: #aab4c8;
       font-size: clamp(0.98rem, 2vw, 1.1rem);
       line-height: 1.6;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     #projects .section-head {
       display: flex;
@@ -1312,3 +1316,255 @@ table {
 
     .scroll-cue,
     .stack-tags { display: none; }
+
+    /* ============================================================
+       SIDEBAR DROITE — cachée par défaut (mobile-first)
+       ============================================================ */
+    .sidebar-right { display: none; }
+
+    /* ============================================================
+       LAYOUT DESKTOP 3 COLONNES — min-width: 1024px
+       ============================================================ */
+    @media (min-width: 1024px) {
+
+      /* ── Corps : padding pour compenser les sidebars fixes ── */
+      body {
+        padding-left: 220px;
+        padding-right: 240px;
+        display: flex;
+        flex-direction: column;
+      }
+
+      /* ── Ordre d'affichage desktop : hero → carousel → projets → contact → footer ── */
+      .hero      { order: 1; }
+      .about     { order: 2; }
+      #projects  { order: 3; }
+      #contact   { order: 4; }
+      footer     { order: 5; }
+
+      /* ── Header principal : caché en desktop ── */
+      .app-header { display: none; }
+
+      /* ── Overlay du drawer : désactivé ── */
+      .drawer-overlay { display: none !important; }
+
+      /* ── NAV DRAWER → sidebar gauche fixe ── */
+      .nav-drawer {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: auto;
+        width: 220px;
+        max-width: 220px;
+        transform: none !important;
+        border-left: none;
+        border-right: 1px solid #1e2340;
+        box-shadow: none;
+        padding: 1.5rem 1rem;
+        background: #07091a;
+        display: flex;
+        flex-direction: column;
+        z-index: 10;
+        overflow-y: auto;
+      }
+
+      /* Bouton fermer : caché en desktop */
+      .drawer-header { display: none; }
+
+      /* Logo dans la sidebar gauche */
+      .profile-card {
+        margin-bottom: 1.5rem;
+        background: transparent;
+        border: none;
+        padding: 0 0 1rem;
+        border-bottom: 1px solid #1e2340;
+      }
+
+      .profile-name { font-size: 0.95rem; }
+
+      /* Nav liens */
+      .nav-link {
+        min-height: 2.6rem;
+        font-size: 0.85rem;
+        border-radius: 8px;
+      }
+
+      .nav-link:hover {
+        background: rgba(139, 92, 246, 0.12);
+        border-left: 0;
+        color: #fff;
+      }
+
+      /* AI assistant en bas de la sidebar */
+      .ai-assistant-card { margin-top: auto; }
+
+      /* Supprimer le padding-top qui compensait le header fixe */
+      .hero {
+        padding-top: 4rem;
+      }
+
+      /* ── SIDEBAR DROITE ── */
+      .sidebar-right {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 240px;
+        padding: 1.5rem 1rem;
+        background: #07091a;
+        border-left: 1px solid #1e2340;
+        overflow-y: auto;
+        z-index: 10;
+      }
+
+      /* Carte profil sidebar droite */
+      .sr-profile-card {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid #1e2340;
+      }
+
+      .sr-avatar {
+        width: 44px;
+        height: 44px;
+        flex-shrink: 0;
+        border-radius: 50%;
+        background: #8050ed;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: #fff;
+      }
+
+      .sr-profile-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.1rem;
+      }
+
+      .sr-name {
+        font-weight: 700;
+        font-size: 0.85rem;
+        color: #f0f4ff;
+      }
+
+      .sr-role {
+        font-size: 0.65rem;
+        color: #a78bfa;
+        font-family: 'JetBrains Mono', monospace;
+      }
+
+      /* Bio */
+      .sr-bio {
+        font-size: 0.75rem;
+        color: #8898b5;
+        line-height: 1.55;
+      }
+
+      /* Bloc compétences */
+      .sr-skills-block {
+        background: #0e1220;
+        border: 1px solid #252d49;
+        border-radius: 10px;
+        padding: 0.85rem;
+      }
+
+      .sr-skills-title {
+        font-family: 'JetBrains Mono', monospace;
+        font-size: 0.65rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #a78bfa;
+        margin-bottom: 0.65rem;
+      }
+
+      .sr-skill-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.35rem 0;
+        border-bottom: 1px solid #1a2035;
+        font-size: 0.72rem;
+      }
+
+      .sr-skill-row:last-child { border-bottom: none; }
+
+      .sr-skill-name { color: #d1d8e8; font-weight: 600; }
+      .sr-skill-tech { color: #64748b; font-family: 'JetBrains Mono', monospace; font-size: 0.65rem; }
+
+      /* Stats */
+      .sr-stats-row {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 0.5rem;
+        background: #0e1220;
+        border: 1px solid #252d49;
+        border-radius: 10px;
+        padding: 0.75rem 0.5rem;
+      }
+
+      .sr-stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.2rem;
+        text-align: center;
+      }
+
+      .sr-stat strong {
+        color: #a78bfa;
+        font-family: 'Space Grotesk', sans-serif;
+        font-size: 1rem;
+        font-weight: 700;
+      }
+
+      .sr-stat span {
+        color: #64748b;
+        font-size: 0.6rem;
+        line-height: 1.3;
+      }
+
+      /* Citation */
+      .sr-quote {
+        background: #0e1220;
+        border: 1px solid #252d49;
+        border-left: 3px solid #8b5cf6;
+        border-radius: 8px;
+        padding: 0.75rem;
+        font-size: 0.72rem;
+        color: #94a3b8;
+        line-height: 1.55;
+        font-style: italic;
+      }
+
+      /* Bouton contact */
+      .sr-contact-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        padding: 0.7rem 1rem;
+        background: linear-gradient(105deg, #5145e5, #942eea);
+        border-radius: 9px;
+        color: #fff;
+        font-weight: 600;
+        font-size: 0.82rem;
+        text-decoration: none;
+        transition: filter 0.2s ease, transform 0.2s ease;
+        margin-top: auto;
+      }
+
+      .sr-contact-btn:hover {
+        filter: brightness(1.15);
+        transform: translateY(-2px);
+      }
+
+    } /* fin @media desktop */

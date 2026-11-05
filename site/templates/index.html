@@ -50,9 +50,8 @@
     <div class="nav-list-box">
       <ul class="nav-list">
         <li><a href="#accueil" class="nav-link"><i class="fa-solid fa-house"></i> Accueil</a></li>
-        <li><a href="#projects" class="nav-link"><i class="fa-solid fa-code"></i> Projets</a></li>
         <li><a href="#about" class="nav-link"><i class="fa-solid fa-layer-group"></i> Tech Stack</a></li>
-        <li><a href="#about" class="nav-link"><i class="fa-regular fa-user"></i> À propos</a></li>
+        <li><a href="#projects" class="nav-link"><i class="fa-solid fa-code"></i> Projets</a></li>
         <li><a href="#contact" class="nav-link"><i class="fa-solid fa-envelope"></i> Contact</a></li>
       </ul>
     </div>
@@ -74,6 +73,37 @@
     </div>
 
   </aside>
+
+<!-- SIDEBAR DROITE (desktop uniquement) -->
+<aside class="sidebar-right" id="sidebarRight">
+  <div class="sr-profile-card">
+    <div class="sr-avatar">CP</div>
+    <div class="sr-profile-info">
+      <span class="sr-name">Clement Peugeot</span>
+      <span class="sr-role">Développeur Full Stack</span>
+    </div>
+  </div>
+  <p class="sr-bio">Passionné par le développement, j'aime construire des outils utiles, élégants et bien pensés.</p>
+  <div class="sr-skills-block">
+    <div class="sr-skills-title">Compétences clés</div>
+    <div class="sr-skill-row"><span class="sr-skill-name">Python</span><span class="sr-skill-tech">Flask&nbsp;·&nbsp;Django</span></div>
+    <div class="sr-skill-row"><span class="sr-skill-name">JavaScript</span><span class="sr-skill-tech">React&nbsp;·&nbsp;Node</span></div>
+    <div class="sr-skill-row"><span class="sr-skill-name">Database</span><span class="sr-skill-tech">SQL&nbsp;·&nbsp;MongoDB</span></div>
+    <div class="sr-skill-row"><span class="sr-skill-name">Cloud</span><span class="sr-skill-tech">AWS&nbsp;·&nbsp;Docker</span></div>
+  </div>
+  <div class="sr-stats-row">
+    <div class="sr-stat"><strong>{{ stats.experience_years }}+</strong><span>Années d'exp.</span></div>
+    <div class="sr-stat"><strong>{{ stats.projects_count }}+</strong><span>Projets réalisés</span></div>
+    <div class="sr-stat"><strong>100%</strong><span>Passionné</span></div>
+  </div>
+  <blockquote class="sr-quote">
+    "La meilleure code est celui qui règle un problème réel de manière élégante."
+  </blockquote>
+  <a href="#contact" class="sr-contact-btn">
+    <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+    Me contacter
+  </a>
+</aside>
 
 <section class="hero" id="accueil">
   
@@ -106,9 +136,11 @@
     <div>
       <div class="section-label">Mes Projets</div>
       <div class="section-title">Solutions réelles. </div>
+      <br>
+      <p style="margin: 0 0 25px 0;" id="project-pre-text">You can have a project demo clicking on the project name.<br>And check out the code if you click the arrow. Those aren't all finished yet.</p>
     </div>
+    
   </div>
-  <p style="margin: 0 0 25px 0" id="project-pre-text">You can have a project demo clicking on the project name.<br>And check out the code if you click the arrow. Those aren't all finished yet.</p>
   <div class="projects-container">
     <div class="project-filters" role="group" aria-label="Filtrer les projets par thème">
       <button class="project-filter is-active" type="button" data-project-filter="all" aria-pressed="true">Tous</button>
